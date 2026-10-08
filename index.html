@@ -1,0 +1,134 @@
+<!doctype html><html lang="de"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Mathe 5 – Zahlen, Zahlenfolgen & Diagramme</title><style>
+:root{--b:#1769aa;--g:#35a66f;--y:#ffd65a;--r:#d94b4b;--ink:#26354a}*{box-sizing:border-box}
+body{margin:0;font-family:"Century Gothic",Arial,sans-serif;color:var(--ink);background:#fffdf7;background-image:linear-gradient(#dfe8ef 1px,transparent 1px),linear-gradient(90deg,#dfe8ef 1px,transparent 1px);background-size:28px 28px}
+main{max-width:900px;margin:auto;padding:22px}.box{background:#fff;border:3px solid var(--ink);border-radius:22px;padding:22px;box-shadow:7px 7px 0 #26354a22;margin-bottom:18px}
+h1{margin:0;color:var(--b);font-size:clamp(28px,5vw,44px)}.sub{font-size:17px}.top{display:flex;justify-content:space-between;gap:12px;align-items:center}
+.pill{background:var(--y);border:2px solid var(--ink);padding:8px 13px;border-radius:999px;font-weight:bold}.barbox{height:17px;border:2px solid var(--ink);border-radius:20px;overflow:hidden;background:white;margin:15px 0 6px}.bar{height:100%;background:var(--g);width:0;transition:.3s}
+.q{font-size:23px;font-weight:bold;margin:12px 0 18px}.answers{display:grid;grid-template-columns:1fr 1fr;gap:11px}.ans{font:700 17px "Century Gothic",Arial;background:white;border:2px solid var(--ink);border-radius:14px;padding:14px;cursor:pointer;min-height:60px}
+.ok{background:#dff5e8!important;border-color:var(--g)!important}.no{background:#fde1e1!important;border-color:var(--r)!important}.feedback{font-weight:bold;font-size:17px;min-height:30px;margin-top:13px}
+.next,.restart{display:none;margin:14px auto 0;padding:12px 22px;border:2px solid var(--ink);border-radius:13px;background:var(--y);font:700 17px "Century Gothic",Arial;cursor:pointer}.result{text-align:center;display:none}.big{font-size:64px}
+.topicgrid{display:grid;grid-template-columns:repeat(2,1fr);gap:14px;margin-top:18px}
+.topicbtn{font:700 18px "Century Gothic",Arial,sans-serif;background:white;border:3px solid var(--ink);border-radius:18px;padding:20px 14px;cursor:pointer;box-shadow:4px 4px 0 #26354a22}
+.topicbtn:hover{transform:translateY(-2px)}
+.topicbtn small{display:block;font-weight:normal;margin-top:6px}
+.back{margin:0 0 14px;padding:9px 14px;border:2px solid var(--ink);border-radius:12px;background:white;font:700 15px "Century Gothic",Arial;cursor:pointer}
+#quiz{display:none}
+@media(max-width:650px){.answers,.topicgrid{grid-template-columns:1fr}.top{align-items:flex-start;flex-direction:column}}</style></head><body><main>
+<section class="box"><div class="top"><div><h1>🔢 Mathe-Training</h1><div class="sub">Wähle dein Thema und übe genau das, was du gerade brauchst. ⭐</div></div><div class="pill" id="counter">Thema wählen</div></div><div class="barbox"><div class="bar" id="bar"></div></div><div class="sub" id="hint">Du kommst erst weiter, wenn die Aufgabe richtig gelöst ist.</div></section>
+<section class="box" id="menu">
+<h2>🎯 Was möchtest du üben?</h2>
+<div class="topicgrid">
+<button class="topicbtn" data-topic="Zahlenfolgen">🔢 Zahlenfolgen<small>Folgen fortsetzen, Regeln erkennen & Figurenfolgen</small></button>
+<button class="topicbtn" data-topic="Zahlenmengen">🧺 Zahlenmengen<small>Mengen, Elemente, ∈ / ∉, ℕ und ℕ₀</small></button>
+<button class="topicbtn" data-topic="Zahlen ordnen">↕️ Zahlen ordnen<small>größer, kleiner, Reihenfolge & Vergleichszeichen</small></button>
+<button class="topicbtn" data-topic="Diagramme">📊 Diagramme<small>Strichlisten, Häufigkeiten, Säulen & Balken</small></button>
+<button class="topicbtn" data-topic="Alle Themen">🌟 Alles gemischt<small>Eine bunte Mischung aus allen Themen</small></button>
+</div></section>
+<section class="box" id="quiz"><button class="back" id="back">← Anderes Thema wählen</button><span class="pill" id="kind"></span><div class="q" id="q"></div><div class="answers" id="answers"></div><div class="feedback" id="fb"></div><button class="next" id="next">Weiter ➜</button></section>
+<section class="box result" id="result"><div class="big">🎉</div><h1>Geschafft!</h1><p>Du hast alle Aufgaben richtig gelöst. Super gearbeitet!</p><button class="restart" id="restart">Noch einmal üben ↻</button></section>
+</main><script>
+const Q=[
+["Zahlenfolge","Wie geht die Folge weiter? 3, 5, 7, 9, …",["10","11","12","13"],1,"Immer +2."],
+["Zahlenfolge","Wie geht die Folge weiter? 13, 15, 17, 19, …",["20","21","22","23"],1,"Addiere immer 2."],
+["Zahlenfolge","Wie geht die Folge weiter? 4, 8, 12, 16, …",["18","19","20","22"],2,"Immer +4."],
+["Zahlenfolge","Wie geht die Folge weiter? 5, 10, 15, 20, …",["21","24","25","30"],2,"Immer +5."],
+["Zahlenfolge","Wie geht die Folge weiter? 30, 27, 24, 21, …",["20","19","18","17"],2,"Immer −3."],
+["Zahlenfolge","Wie geht die Folge weiter? 66, 55, 45, 36, 28, …",["20","21","22","23"],1,"Die Schritte sind −11, −10, −9, −8, dann −7."],
+["Zahlenfolge","Welche Zahl fehlt? 2, 6, 10, __, 18",["12","13","14","15"],2,"Immer +4."],
+["Zahlenfolge","Welche Zahl fehlt? 8, 16, 18, 36, 38, __",["40","56","76","78"],2,"Abwechselnd ×2 und +2."],
+["Zahlenfolge","Wie geht es weiter? 2, 6, 5, 15, 14, 42, …",["41","43","84","126"],0,"Abwechselnd ×3 und −1."],
+["Zahlenfolge","Wie geht es weiter? 8, 6, 24, 22, 88, 86, …",["84","172","344","348"],2,"Abwechselnd −2 und ×4."],
+["Regel erkennen","Welche Regel passt? 7, 10, 13, 16, 19, …",["immer +2","immer +3","immer ×3","immer −3"],1,"Jeder Nachfolger ist um 3 größer."],
+["Regel erkennen","Welche Regel passt? 40, 35, 30, 25, …",["immer −5","immer +5","immer :5","immer −10"],0,"Immer 5 abziehen."],
+["Zahlenmengen","Was ist eine Zahlenfolge?",["Eine geordnete Folge von Zahlen","Nur eine einzelne Zahl","Eine Rechenart","Ein Diagramm"],0,"Eine Zahlenfolge besteht aus Zahlen in einer bestimmten Reihenfolge."],
+["Zahlenmengen","Was ist eine Menge?",["Eine Rechenaufgabe","Eine Zusammenfassung von Elementen","Eine Zahlenfolge mit genau 3 Zahlen","Eine Tabelle"],1,"Elemente können zu einer Menge zusammengefasst werden."],
+["Zahlenmengen","Wie nennt man einzelne Zahlen in einer Menge?",["Folgen","Elemente","Diagramme","Vorgänger"],1,"Einzelne Zahlen heißen Elemente."],
+["Zahlenmengen","Wie schreibt man die Elemente einer Menge?",["( )","[ ]","{ }","< >"],2,"Mengen werden mit geschweiften Klammern geschrieben."],
+["Zahlenmengen","A = {3; 5; 7; 9}. Welche Aussage stimmt?",["5 ∈ A","6 ∈ A","2 ∈ A","10 ∈ A"],0,"5 ist Element der Menge A."],
+["Zahlenmengen","A = {3; 5; 7; 9}. Welche Aussage stimmt?",["6 ∈ A","6 ∉ A","7 ∉ A","9 ∉ A"],1,"6 gehört nicht zur Menge A."],
+["Zahlenmengen","Was bedeutet 7 ∈ A?",["7 ist kein Element von A","7 ist Element von A","A ist kleiner als 7","7 ist eine Menge"],1,"∈ bedeutet: ist Element von."],
+["Zahlenmengen","Was bedeutet 4 ∉ B?",["4 ist Element von B","4 ist nicht Element von B","4 ist größer als B","B enthält nur 4"],1,"∉ bedeutet: ist nicht Element von."],
+["Natürliche Zahlen","Welche Zahl gehört sicher zu ℕ?",["−4","3","1,5","−2,5"],1,"3 ist eine natürliche Zahl."],
+["Natürliche Zahlen","Welche Menge beschreibt ℕ passend?",["{1; 2; 3; 4; …}","{−1; −2; −3; …}","{0,5; 1,5; …}","{2; 4; 6}"],0,"ℕ ist hier die Menge der natürlichen Zahlen ab 1."],
+["Natürliche Zahlen","Welche Menge beschreibt ℕ₀ passend?",["{1; 2; 3; …}","{0; 1; 2; 3; …}","{−1; 0; 1; …}","{0; 2; 4; …}"],1,"ℕ₀ enthält auch die 0."],
+["Natürliche Zahlen","Welche Aussage ist richtig?",["0 ∈ ℕ₀","0 ∉ ℕ₀","−1 ∈ ℕ₀","2,5 ∈ ℕ₀"],0,"0 gehört zu ℕ₀."],
+["Figurenfolge","Eine Figurenfolge hat 3, 5, 7, 9, … Hölzchen. Wie viele braucht Figur 6?",["11","12","13","15"],2,"Figur 5 hat 11, Figur 6 hat 13 Hölzchen."],
+["Figurenfolge","Bei 3, 5, 7, 9, …: Gibt es eine Figur mit 12 Hölzchen?",["Ja","Nein"],1,"Es kommen nur ungerade Anzahlen vor."],
+["Figurenfolge","Eine Folge hat 5, 9, 12, 16, 19, 23, … Hölzchen. Was wird abwechselnd addiert?",["+4 und +3","+3 und +2","+4 und +4","+5 und +3"],0,"Die Abstände wechseln: +4, +3, +4, +3 …"],
+["Figurenfolge","Kästchenfolge: 1, 3, 6, 10, 15, … Wie viele Kästchen hat Figur 6?",["18","20","21","25"],2,"Nacheinander wird +2, +3, +4, +5, +6 addiert."],
+["Figurenfolge","Kästchenfolge: 1, 3, 6, 10, 15, 21, 28, … Gibt es eine Figur mit 50 Kästchen?",["Ja","Nein"],1,"Nach 45 folgt 55; 50 wird übersprungen."],
+["Mix","Welche Aussage passt zu A = {2; 4; 6; 8; …}?",["5 ∈ A","6 ∈ A","7 ∈ A","9 ∈ A"],1,"6 gehört zur angegebenen Menge."],
+
+["Zahlen ordnen","Ordne von klein nach groß: 18, 7, 25, 12",["7 < 12 < 18 < 25","25 < 18 < 12 < 7","7 < 18 < 12 < 25","12 < 7 < 18 < 25"],0,"Beginne mit der kleinsten Zahl."],
+["Zahlen ordnen","Ordne von groß nach klein: 42, 9, 31, 17",["9 > 17 > 31 > 42","42 > 31 > 17 > 9","42 > 17 > 31 > 9","31 > 42 > 17 > 9"],1,"Beginne mit der größten Zahl."],
+["Zahlen ordnen","Welche Zahl ist am kleinsten?",["305","350","503","530"],0,"305 ist die kleinste Zahl."],
+["Zahlen ordnen","Welche Zahl ist am größten?",["1 205","1 250","1 052","1 025"],1,"1 250 ist die größte Zahl."],
+["Zahlen ordnen","Welches Zeichen passt? 478 __ 487",["<",">","="],0,"478 ist kleiner als 487."],
+["Zahlen ordnen","Welches Zeichen passt? 2 040 __ 2 004",["<",">","="],1,"2 040 ist größer als 2 004."],
+["Zahlen ordnen","Welche Reihenfolge stimmt?",["999 < 1 001 < 1 010","1 010 < 1 001 < 999","1 001 < 999 < 1 010","999 < 1 010 < 1 001"],0,"Vergleiche zuerst die Tausender, dann Hunderter, Zehner und Einer."],
+["Zahlen ordnen","Welche Zahl liegt zwischen 398 und 402?",["390","400","405","410"],1,"400 liegt zwischen 398 und 402."],
+["Diagramme","Eine Umfrage ergibt: Bus 8, Fahrrad 5, zu Fuß 6. Was wird am häufigsten genutzt?",["Fahrrad","zu Fuß","Bus"],2,"8 ist die größte Häufigkeit."],
+["Diagramme","In einer Häufigkeitsliste steht: Fußball 8, Handball 6, Volleyball 4, Leichtathletik 2. Welche Sportart wurde am seltensten genannt?",["Fußball","Handball","Volleyball","Leichtathletik"],3,"Leichtathletik wurde nur 2-mal genannt."],
+["Diagramme","Fußball 8, Handball 6, Volleyball 4, Leichtathletik 2: Wie viele Kinder wurden insgesamt befragt?",["18","20","22","24"],1,"8 + 6 + 4 + 2 = 20."],
+["Diagramme","Welche Darstellung hat senkrechte Säulen?",["Säulendiagramm","Balkendiagramm","Strichliste","Zahlenfolge"],0,"Beim Säulendiagramm stehen die Säulen senkrecht."],
+["Diagramme","Welche Darstellung hat waagrechte Balken?",["Säulendiagramm","Balkendiagramm","Häufigkeitsliste","Zahlenmenge"],1,"Beim Balkendiagramm verlaufen die Balken waagrecht."],
+["Diagramme","Wozu dient eine Strichliste?",["Zum Zählen gleicher Antworten","Zum Addieren großer Zahlen","Zum Ordnen von Zahlen","Zum Zeichnen von Mengen"],0,"Mit einer Strichliste kann man gleiche Antworten übersichtlich zählen."],
+["Diagramme","Was gibt die Häufigkeit an?",["Wie oft eine Information vorkommt","Wie groß eine Zahl geschrieben wird","Wie viele Achsen ein Diagramm hat","Welche Zahl zuerst kommt"],0,"Die Häufigkeit sagt, wie oft etwas vorkommt."],
+["Diagramme","Augenfarben: braun 8, schwarz 11, blau 3, grün 1. Welche Augenfarbe kommt am häufigsten vor?",["braun","schwarz","blau","grün"],1,"Schwarz hat mit 11 die größte Häufigkeit."],
+["Diagramme","Augenfarben: braun 8, schwarz 11, blau 3, grün 1. Wie viele Kinder wurden befragt?",["21","22","23","24"],2,"8 + 11 + 3 + 1 = 23."],
+["Diagramme","Medien: TV 7, Radio 2, Internet 12, Zeitung 4. Wie viel häufiger wurde Internet als Radio genannt?",["8-mal","9-mal","10-mal","14-mal"],2,"12 − 2 = 10."]
+];
+let i=0, activeQ=[], activeTopic="";
+const q=document.getElementById("q"),a=document.getElementById("answers"),fb=document.getElementById("fb"),next=document.getElementById("next"),bar=document.getElementById("bar"),counter=document.getElementById("counter"),kind=document.getElementById("kind"),menu=document.getElementById("menu"),quiz=document.getElementById("quiz"),result=document.getElementById("result"),hint=document.getElementById("hint");
+
+function questionsFor(topic){
+  if(topic==="Alle Themen") return [...Q];
+  if(topic==="Zahlenfolgen") return Q.filter(x=>["Zahlenfolge","Regel erkennen","Figurenfolge"].includes(x[0]));
+  if(topic==="Zahlenmengen") return Q.filter(x=>["Zahlenmengen","Natürliche Zahlen","Mix"].includes(x[0]));
+  return Q.filter(x=>x[0]===topic);
+}
+function startTopic(topic){
+  activeTopic=topic; activeQ=questionsFor(topic); i=0;
+  menu.style.display="none"; result.style.display="none"; quiz.style.display="block";
+  hint.textContent="Thema: "+topic+" – du kommst erst weiter, wenn die Aufgabe richtig gelöst ist. ⭐";
+  draw();
+}
+function draw(){
+  let x=activeQ[i];
+  q.textContent=x[1]; kind.textContent=x[0];
+  a.innerHTML=x[2].map((v,j)=>`<button class="ans" data-i="${j}">${v}</button>`).join("");
+  fb.textContent=""; next.style.display="none";
+  counter.textContent=`${i+1} / ${activeQ.length}`;
+  bar.style.width=`${i/activeQ.length*100}%`;
+  document.querySelectorAll(".ans").forEach(b=>b.onclick=()=>check(+b.dataset.i,b));
+}
+function check(j,b){
+  let x=activeQ[i];
+  if(j===x[3]){
+    b.classList.add("ok"); fb.style.color="var(--g)"; fb.textContent="✅ Richtig! "+x[4];
+    document.querySelectorAll(".ans").forEach(z=>z.disabled=true); next.style.display="block";
+  }else{
+    b.classList.add("no"); fb.style.color="var(--r)"; fb.textContent="❌ Noch nicht. Überlege noch einmal!";
+    setTimeout(()=>b.classList.remove("no"),650);
+  }
+}
+next.onclick=()=>{
+  i++;
+  if(i<activeQ.length) draw();
+  else{
+    quiz.style.display="none"; result.style.display="block"; bar.style.width="100%";
+    counter.textContent=`${activeQ.length} / ${activeQ.length}`;
+    result.querySelector("p").textContent=`Du hast das Thema „${activeTopic}“ geschafft. Super gearbeitet!`;
+    document.getElementById("restart").style.display="inline-block";
+  }
+};
+function showMenu(){
+  i=0; activeQ=[]; quiz.style.display="none"; result.style.display="none"; menu.style.display="block";
+  counter.textContent="Thema wählen"; bar.style.width="0"; hint.textContent="Du kommst erst weiter, wenn die Aufgabe richtig gelöst ist.";
+}
+document.getElementById("back").onclick=showMenu;
+document.getElementById("restart").onclick=()=>startTopic(activeTopic);
+document.querySelectorAll(".topicbtn").forEach(b=>b.onclick=()=>startTopic(b.dataset.topic));
+showMenu();
+</script></body></html>
