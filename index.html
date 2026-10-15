@@ -24,6 +24,7 @@ h1{margin:0;color:var(--b);font-size:clamp(28px,5vw,44px)}.sub{font-size:17px}.t
 <button class="topicbtn" data-topic="Zahlen ordnen">↕️ Zahlen ordnen<small>größer, kleiner, Reihenfolge & Vergleichszeichen</small></button>
 <button class="topicbtn" data-topic="Diagramme">📊 Diagramme<small>Strichlisten, Häufigkeiten, Säulen & Balken</small></button>
 <button class="topicbtn" data-topic="Dezimalsystem">🏛️ Dezimalsystem<small>Stellenwerttafel, Vorgänger & Nachfolger, Zahlwörter und Stufenzahlen</small></button>
+<button class="topicbtn" data-topic="Zehnerpotenzen">🔟 Zehnerpotenzen<small>10⁰ bis 10⁹, Stellenwerte und Zerlegung von Zahlen</small></button>
 <button class="topicbtn" data-topic="Alle Themen">🌟 Alles gemischt<small>Eine bunte Mischung aus allen Themen</small></button>
 </div></section>
 <section class="box" id="quiz"><button class="back" id="back">← Anderes Thema wählen</button><span class="pill" id="kind"></span><div class="q" id="q"></div><div class="answers" id="answers"></div><div class="feedback" id="fb"></div><button class="next" id="next">Weiter ➜</button></section>
@@ -102,7 +103,37 @@ const Q=[
 ["Dezimalsystem","Warum schreiben wir große Zahlen in Dreierpäckchen?",["Damit man sie leichter lesen kann","Damit sie größer werden","Damit jede Zahl durch 3 teilbar ist","Damit Nullen verschwinden"],0,"Dreierpäckchen machen große Zahlen übersichtlicher."],
 ["Dezimalsystem","Welche Schreibweise in Dreierpäckchen ist richtig?",["123 456 789","12 3456 789","1234 56 789","1 23 456789"],0,"Von rechts werden die Ziffern in Dreiergruppen gegliedert."],
 ["Dezimalsystem","Welche Reihenfolge der Stellenwert-Gruppen ist von groß nach klein richtig?",["Milliarden – Millionen – Tausend – Einer","Millionen – Milliarden – Einer – Tausend","Tausend – Milliarden – Millionen – Einer","Einer – Tausend – Millionen – Milliarden"],0,"Von links nach rechts: Milliarden, Millionen, Tausend und die Einergruppe."],
-["Dezimalsystem","Was sind Stufenzahlen?",["1, 10, 100, 1 000, 10 000, …","2, 4, 6, 8, …","1, 2, 3, 4, …","5, 10, 15, 20, …"],0,"Stufenzahlen sind 1, 10, 100, 1 000, 10 000 und so weiter."]
+["Dezimalsystem","Was sind Stufenzahlen?",["1, 10, 100, 1 000, 10 000, …","2, 4, 6, 8, …","1, 2, 3, 4, …","5, 10, 15, 20, …"],0,"Stufenzahlen sind 1, 10, 100, 1 000, 10 000 und so weiter."],
+["Zehnerpotenzen", "Wie viel ist 10⁰?", ["0", "1", "10", "100"], 1, "10⁰ = 1."],
+["Zehnerpotenzen", "Wie viel ist 10¹?", ["1", "10", "100", "1 000"], 1, "10¹ = 10."],
+["Zehnerpotenzen", "Wie viel ist 10²?", ["20", "100", "1 000", "10 000"], 1, "10² = 100."],
+["Zehnerpotenzen", "Wie viel ist 10³?", ["100", "1 000", "10 000", "100 000"], 1, "10³ = 1 000."],
+["Zehnerpotenzen", "Wie viel ist 10⁴?", ["1 000", "10 000", "100 000", "1 000 000"], 1, "10⁴ = 10 000."],
+["Zehnerpotenzen", "Wie viel ist 10⁵?", ["10 000", "100 000", "1 000 000", "10 000 000"], 1, "10⁵ = 100 000."],
+["Zehnerpotenzen", "Wie viel ist 10⁶?", ["100 000", "1 000 000", "10 000 000", "100 000 000"], 1, "10⁶ = 1 000 000."],
+["Zehnerpotenzen", "Welche Zehnerpotenz ist 100?", ["10¹", "10²", "10³", "10⁴"], 1, "100 = 10²."],
+["Zehnerpotenzen", "Welche Zehnerpotenz ist 1 000?", ["10²", "10³", "10⁴", "10⁵"], 1, "1 000 = 10³."],
+["Zehnerpotenzen", "Welche Zehnerpotenz ist 100 000?", ["10⁴", "10⁵", "10⁶", "10⁷"], 1, "100 000 = 10⁵."],
+["Zehnerpotenzen", "Welche Zehnerpotenz ist 1 000 000?", ["10⁵", "10⁶", "10⁷", "10⁸"], 1, "1 000 000 = 10⁶."],
+["Zehnerpotenzen", "Welche Zehnerpotenz gehört zur Einerstelle?", ["10⁰", "10¹", "10²", "10³"], 0, "Einer = 10⁰."],
+["Zehnerpotenzen", "Welche Zehnerpotenz gehört zur Zehnerstelle?", ["10⁰", "10¹", "10²", "10³"], 1, "Zehner = 10¹."],
+["Zehnerpotenzen", "Welche Zehnerpotenz gehört zur Hunderterstelle?", ["10¹", "10²", "10³", "10⁴"], 1, "Hunderter = 10²."],
+["Zehnerpotenzen", "Welche Zehnerpotenz gehört zur Tausenderstelle?", ["10²", "10³", "10⁴", "10⁵"], 1, "Tausender = 10³."],
+["Zehnerpotenzen", "Welche Zerlegung von 4 567 ist richtig?", ["4·10³ + 5·10² + 6·10¹ + 7·10⁰", "4·10⁴ + 5·10³ + 6·10² + 7·10¹", "4·10² + 5·10¹ + 6·10⁰ + 7", "4·10³ + 5·10³ + 6·10³ + 7·10³"], 0, "4 567 = 4·1000 + 5·100 + 6·10 + 7·1."],
+["Zehnerpotenzen", "Welche Zerlegung von 653 ist richtig?", ["6·10² + 5·10¹ + 3·10⁰", "6·10³ + 5·10² + 3·10¹", "6·10¹ + 5·10² + 3·10³", "6·10² + 5·10² + 3·10²"], 0, "653 = 6·100 + 5·10 + 3·1."],
+["Zehnerpotenzen", "Welche Zerlegung von 8 204 ist richtig?", ["8·10³ + 2·10² + 4·10⁰", "8·10⁴ + 2·10³ + 4·10¹", "8·10³ + 2·10¹ + 4·10⁰", "8·10² + 2·10¹ + 4·10⁰"], 0, "8 204 = 8·1000 + 2·100 + 4·1."],
+["Zehnerpotenzen", "Welche Zerlegung von 30 706 ist richtig?", ["3·10⁴ + 7·10² + 6·10⁰", "3·10³ + 7·10² + 6·10⁰", "3·10⁴ + 7·10³ + 6·10²", "3·10⁵ + 7·10² + 6·10⁰"], 0, "30 706 = 3·10⁴ + 7·10² + 6·10⁰."],
+["Zehnerpotenzen", "Welche Zahl ist 5·10³ + 2·10² + 8·10¹ + 4·10⁰?", ["5 284", "52 840", "5 824", "528"], 0, "5 000 + 200 + 80 + 4 = 5 284."],
+["Zehnerpotenzen", "Welche Zahl ist 7·10⁴ + 3·10³ + 2·10¹ + 1·10⁰?", ["73 021", "70 321", "7 321", "73 201"], 0, "70 000 + 3 000 + 20 + 1 = 73 021."],
+["Zehnerpotenzen", "Welche Zahl ist 9·10⁵ + 4·10² + 6·10⁰?", ["900 406", "904 006", "900 046", "90 406"], 0, "900 000 + 400 + 6 = 900 406."],
+["Zehnerpotenzen", "Welchen Stellenwert hat die 4 in 4 567?", ["4·10²", "4·10³", "4·10⁴", "4·10¹"], 1, "Die 4 steht an der Tausenderstelle: 4·10³."],
+["Zehnerpotenzen", "Welchen Stellenwert hat die 5 in 4 567?", ["5·10³", "5·10²", "5·10¹", "5·10⁰"], 1, "Die 5 steht an der Hunderterstelle: 5·10²."],
+["Zehnerpotenzen", "Welchen Stellenwert hat die 6 in 4 567?", ["6·10³", "6·10²", "6·10¹", "6·10⁰"], 2, "Die 6 steht an der Zehnerstelle: 6·10¹."],
+["Zehnerpotenzen", "Welchen Stellenwert hat die 7 in 4 567?", ["7·10³", "7·10²", "7·10¹", "7·10⁰"], 3, "Die 7 steht an der Einerstelle: 7·10⁰."],
+["Zehnerpotenzen", "Welche Zahl entsteht aus 2·10⁶ + 4·10⁴ + 3·10² + 8·10⁰?", ["2 040 308", "2 400 308", "2 043 008", "2 040 038"], 0, "2 000 000 + 40 000 + 300 + 8 = 2 040 308."],
+["Zehnerpotenzen", "Was passiert mit dem Stellenwert, wenn man eine Stelle nach links geht?", ["Er wird 10-mal so groß", "Er wird 10-mal so klein", "Er bleibt gleich", "Er wird 2-mal so groß"], 0, "Jede Stelle links hat den zehnfachen Stellenwert."],
+["Zehnerpotenzen", "Was passiert mit dem Stellenwert, wenn man eine Stelle nach rechts geht?", ["Er wird 10-mal so groß", "Er wird 10-mal so klein", "Er wird 100-mal so groß", "Er bleibt gleich"], 1, "Jede Stelle rechts hat ein Zehntel des vorherigen Stellenwerts."],
+["Zehnerpotenzen", "Welche Aussage stimmt?", ["10⁶ hat sechs Nullen", "10⁶ hat fünf Nullen", "10⁶ = 60", "10⁶ = 600 000"], 0, "10⁶ = 1 000 000 und hat sechs Nullen."]
 ];
 let i=0, activeQ=[], activeTopic="";
 const q=document.getElementById("q"),a=document.getElementById("answers"),fb=document.getElementById("fb"),next=document.getElementById("next"),bar=document.getElementById("bar"),counter=document.getElementById("counter"),kind=document.getElementById("kind"),menu=document.getElementById("menu"),quiz=document.getElementById("quiz"),result=document.getElementById("result"),hint=document.getElementById("hint");
