@@ -25,6 +25,7 @@ h1{margin:0;color:var(--b);font-size:clamp(28px,5vw,44px)}.sub{font-size:17px}.t
 <button class="topicbtn" data-topic="Diagramme">📊 Diagramme<small>Strichlisten, Häufigkeiten, Säulen & Balken</small></button>
 <button class="topicbtn" data-topic="Dezimalsystem">🏛️ Dezimalsystem<small>Stellenwerttafel, Vorgänger & Nachfolger, Zahlwörter und Stufenzahlen</small></button>
 <button class="topicbtn" data-topic="Zehnerpotenzen">🔟 Zehnerpotenzen<small>10⁰ bis 10⁹, Stellenwerte und Zerlegung von Zahlen</small></button>
+<button class="topicbtn" data-topic="Runden">🎯 Runden<small>auf Zehner, Hunderter, Tausender und größere Stellen</small></button>
 <button class="topicbtn" data-topic="Alle Themen">🌟 Alles gemischt<small>Eine bunte Mischung aus allen Themen</small></button>
 </div></section>
 <section class="box" id="quiz"><button class="back" id="back">← Anderes Thema wählen</button><span class="pill" id="kind"></span><div class="q" id="q"></div><div class="answers" id="answers"></div><div class="feedback" id="fb"></div><button class="next" id="next">Weiter ➜</button></section>
@@ -133,7 +134,34 @@ const Q=[
 ["Zehnerpotenzen", "Welche Zahl entsteht aus 2·10⁶ + 4·10⁴ + 3·10² + 8·10⁰?", ["2 040 308", "2 400 308", "2 043 008", "2 040 038"], 0, "2 000 000 + 40 000 + 300 + 8 = 2 040 308."],
 ["Zehnerpotenzen", "Was passiert mit dem Stellenwert, wenn man eine Stelle nach links geht?", ["Er wird 10-mal so groß", "Er wird 10-mal so klein", "Er bleibt gleich", "Er wird 2-mal so groß"], 0, "Jede Stelle links hat den zehnfachen Stellenwert."],
 ["Zehnerpotenzen", "Was passiert mit dem Stellenwert, wenn man eine Stelle nach rechts geht?", ["Er wird 10-mal so groß", "Er wird 10-mal so klein", "Er wird 100-mal so groß", "Er bleibt gleich"], 1, "Jede Stelle rechts hat ein Zehntel des vorherigen Stellenwerts."],
-["Zehnerpotenzen", "Welche Aussage stimmt?", ["10⁶ hat sechs Nullen", "10⁶ hat fünf Nullen", "10⁶ = 60", "10⁶ = 600 000"], 0, "10⁶ = 1 000 000 und hat sechs Nullen."]
+["Zehnerpotenzen", "Welche Aussage stimmt?", ["10⁶ hat sechs Nullen", "10⁶ hat fünf Nullen", "10⁶ = 60", "10⁶ = 600 000"], 0, "10⁶ = 1 000 000 und hat sechs Nullen."],
+["Runden","Runde 47 auf Zehner.",["40","50","47","60"],1,"Einerziffer 7 → aufrunden: 47 ≈ 50."],
+["Runden","Runde 123 auf Zehner.",["120","130","100","123"],0,"Einerziffer 3 → abrunden: 123 ≈ 120."],
+["Runden","Runde 685 auf Zehner.",["680","690","700","685"],1,"Einerziffer 5 → aufrunden."],
+["Runden","Runde 342 auf Hunderter.",["300","340","400","350"],0,"Zehnerziffer 4 → abrunden."],
+["Runden","Runde 367 auf Hunderter.",["300","360","400","370"],2,"Zehnerziffer 6 → aufrunden."],
+["Runden","Runde 1 250 auf Hunderter.",["1 200","1 300","1 000","1 250"],1,"Zehnerziffer 5 → aufrunden."],
+["Runden","Runde 4 321 auf Tausender.",["4 000","4 300","5 000","4 320"],0,"Hunderterziffer 3 → abrunden."],
+["Runden","Runde 4 721 auf Tausender.",["4 000","4 700","5 000","4 720"],2,"Hunderterziffer 7 → aufrunden."],
+["Runden","Runde 12 500 auf Tausender.",["12 000","13 000","12 500","10 000"],1,"Hunderterziffer 5 → aufrunden."],
+["Runden","Auf welche Stelle wurde gerundet? 4 567 ≈ 4 570",["Zehner","Hunderter","Tausender","Zehntausender"],0,"4 570 ist auf Zehner gerundet."],
+["Runden","Auf welche Stelle wurde gerundet? 4 567 ≈ 4 600",["Zehner","Hunderter","Tausender","Zehntausender"],1,"4 600 ist auf Hunderter gerundet."],
+["Runden","Auf welche Stelle wurde gerundet? 4 567 ≈ 5 000",["Zehner","Hunderter","Tausender","Zehntausender"],2,"5 000 ist auf Tausender gerundet."],
+["Runden","Welche Ziffer entscheidet beim Runden auf Hunderter?",["Einerziffer","Zehnerziffer","Hunderterziffer","Tausenderziffer"],1,"Du schaust auf die Zehnerziffer."],
+["Runden","Welche Ziffer entscheidet beim Runden auf Tausender?",["Einerziffer","Zehnerziffer","Hunderterziffer","Tausenderziffer"],2,"Du schaust auf die Hunderterziffer."],
+["Runden","Welche Regel stimmt?",["0–4 abrunden, 5–9 aufrunden","0–5 abrunden, 6–9 aufrunden","gerade abrunden, ungerade aufrunden","immer aufrunden"],0,"0–4 abrunden, 5–9 aufrunden."],
+["Runden","Runde 45 678 auf Zehntausender.",["40 000","45 000","50 000","46 000"],2,"Tausenderziffer 5 → aufrunden."],
+["Runden","Runde 34 321 auf Zehntausender.",["30 000","34 000","40 000","35 000"],0,"Tausenderziffer 4 → abrunden."],
+["Runden","Runde 678 901 auf Hunderttausender.",["600 000","670 000","700 000","680 000"],2,"Zehntausenderziffer 7 → aufrunden."],
+["Runden","Runde 621 499 auf Hunderttausender.",["600 000","620 000","700 000","621 000"],0,"Zehntausenderziffer 2 → abrunden."],
+["Runden","Welche Zahl kann auf Zehner gerundet 350 ergeben?",["341","346","355","361"],1,"346 wird auf 350 gerundet."],
+["Runden","Welche Zahl kann auf Hunderter gerundet 1 200 ergeben?",["1 149","1 176","1 251","1 301"],1,"1 176 wird auf 1 200 gerundet."],
+["Runden","Welche Zahl wird auf Tausender gerundet zu 8 000?",["7 499","7 650","8 501","8 999"],1,"7 650 wird auf 8 000 gerundet."],
+["Runden","Runde 6 748 auf Zehner.",["6 740","6 750","6 700","7 000"],1,"Einerziffer 8 → 6 750."],
+["Runden","Runde 6 748 auf Hunderter.",["6 700","6 800","6 750","7 000"],0,"Zehnerziffer 4 → 6 700."],
+["Runden","Runde 6 748 auf Tausender.",["6 000","6 700","7 000","6 750"],2,"Hunderterziffer 7 → 7 000."],
+["Runden","Welche Rundung ist richtig?",["28 451 ≈ 28 500 (auf Hunderter)","28 451 ≈ 28 400 (auf Hunderter)","28 451 ≈ 29 000 (auf Hunderter)","28 451 ≈ 28 450 (auf Hunderter)"],0,"Zehnerziffer 5 → aufrunden."],
+["Runden","Welche Rundung ist richtig?",["73 249 ≈ 73 000 (auf Tausender)","73 249 ≈ 74 000 (auf Tausender)","73 249 ≈ 73 200 (auf Tausender)","73 249 ≈ 70 000 (auf Tausender)"],0,"Hunderterziffer 2 → abrunden."]
 ];
 let i=0, activeQ=[], activeTopic="";
 const q=document.getElementById("q"),a=document.getElementById("answers"),fb=document.getElementById("fb"),next=document.getElementById("next"),bar=document.getElementById("bar"),counter=document.getElementById("counter"),kind=document.getElementById("kind"),menu=document.getElementById("menu"),quiz=document.getElementById("quiz"),result=document.getElementById("result"),hint=document.getElementById("hint");
@@ -153,7 +181,14 @@ function startTopic(topic){
 function draw(){
   let x=activeQ[i];
   q.textContent=x[1]; kind.textContent=x[0];
-  a.innerHTML=x[2].map((v,j)=>`<button class="ans" data-i="${j}">${v}</button>`).join("");
+  // Antworten bei jedem Anzeigen neu mischen, damit die richtige Lösung
+  // nicht immer an derselben Position steht.
+  const mixed=x[2].map((v,j)=>({v,j}));
+  for(let k=mixed.length-1;k>0;k--){
+    const r=Math.floor(Math.random()*(k+1));
+    [mixed[k],mixed[r]]=[mixed[r],mixed[k]];
+  }
+  a.innerHTML=mixed.map(o=>`<button class="ans" data-i="${o.j}">${o.v}</button>`).join("");
   fb.textContent=""; next.style.display="none";
   counter.textContent=`${i+1} / ${activeQ.length}`;
   bar.style.width=`${i/activeQ.length*100}%`;
