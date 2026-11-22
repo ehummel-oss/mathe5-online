@@ -27,13 +27,20 @@ button.secondary{background:#ffe2a0;color:#183b51}button:disabled{opacity:.5;cur
 .written-actions button{background:#1a729a;color:white;border:0;border-radius:10px;padding:11px 14px;font:800 15px "Century Gothic",Arial;cursor:pointer}
 .written-actions button:disabled{opacity:.4}
 .written-message{min-height:28px;font-weight:800;margin-top:10px}
+
+.division-work{font-family:"Century Gothic",Arial,sans-serif;background:#fffdf5;border:2px solid #a7c9dd;border-radius:16px;padding:18px;max-width:650px;margin:10px auto}
+.division-equation{font:800 clamp(23px,4vw,33px) Consolas,monospace;text-align:center;color:#194f7c;margin-bottom:14px}
+.division-history{font:700 20px Consolas,monospace;white-space:pre-wrap;line-height:1.7;background:#f2f8fc;border-radius:12px;padding:12px;min-height:65px}
+.division-prompt{font-size:18px;font-weight:800;margin:16px 0 8px}
+.division-input{max-width:190px!important;font-size:24px!important;text-align:center}
+.division-progress{font-size:15px;color:#46677d}
 </style></head><body><main><a class="back" href="lernbereich-2.html">← Zurück zu den Rechenarten</a><header><h1>➗ Division</h1><p>Lernbereich II · Mathematik 5 · Wähle eine Übungsart!</p></header>
 <section class="box knowledge"><h2>➗ Merkwissen: Division</h2><p><strong>6372 : 27 = 236</strong><br>6372 = Dividend · 27 = Divisor · 236 = Quotient</p><p>✏️ <strong>Schriftlich:</strong> Von links nach rechts schrittweise teilen. Jede Ziffer des Ergebnisses durch Multiplikation und Subtraktion überprüfen.</p><p class="danger">🚨 <strong>Äußerst wichtig:</strong> Durch <strong>0</strong> darf man <strong>niemals</strong> teilen! <strong>0 : 5 = 0</strong> ist dagegen erlaubt. <strong>0 : 0</strong> ist ebenfalls nicht definiert.</p><p>🦄 Merkspruch: „Wer durch null teilt, tötet Einhörner!“</p><p>Bei einer Division mit Rest gilt: <strong>Dividend = Divisor · Quotient + Rest</strong> (Rest kleiner als Divisor).</p></section><section class="box" id="select"><h2>🎯 Was möchtest du üben?</h2><div class="modes">
 <button class="mode" data-mode="mental"><span class="em">🧠</span>Kopfrechnen</button>
 <button class="mode" data-mode="terms"><span class="em">📚</span>Fachbegriffe</button>
 <button class="mode" data-mode="written"><span class="em">✏️</span>Schriftlich rechnen</button><button class="mode" data-mode="rules"><span class="em">🧩</span>Merkwissen testen</button></div><p class="small">Je Runde 10 Aufgaben. Bei Fehlern bekommst du einen Tipp und darfst es noch einmal versuchen.</p></section>
 <section class="box" id="exercise"><div><span class="pill" id="status">Aufgabe 1 / 10</span><span class="pill" id="score">0 ⭐</span></div><div class="bar"><div class="fill" id="fill"></div></div>
-<h2 id="modeTitle"></h2><div class="task" id="task"></div><div id="entry"><input id="answer" inputmode="numeric" autocomplete="off" aria-label="Ergebnis eingeben" placeholder="Ergebnis eingeben"></div><div class="choices" id="choices" hidden></div><div class="written-board" id="writtenBoard"><h3>✏️ Rechne direkt hier auf dem Bildschirm</h3><div class="small">Trage die Ziffern in die Kästchen ein. Du brauchst kein Heft.</div><p id="writtenTask"></p><div class="written-step" id="writtenStep"></div><div class="digit-grid" id="writtenGrid"></div><input id="writtenEntry" style="display:none" inputmode="text" aria-label="Quotient und Rest" placeholder="Quotient"><div class="written-message" id="writtenMessage" aria-live="polite"></div><div class="written-actions"><button id="writtenCheck">✓ Zeile prüfen</button><button id="writtenContinue" hidden>Nächster Rechenschritt →</button></div></div>
+<h2 id="modeTitle"></h2><div class="task" id="task"></div><div id="entry"><input id="answer" inputmode="numeric" autocomplete="off" aria-label="Ergebnis eingeben" placeholder="Ergebnis eingeben"></div><div class="choices" id="choices" hidden></div><div class="written-board" id="writtenBoard"><h3>✏️ Rechne direkt hier auf dem Bildschirm</h3><div class="small">Trage die Ziffern in die Kästchen ein. Du brauchst kein Heft.</div><p id="writtenTask"></p><div class="written-step" id="writtenStep"></div><div id="divisionWork" class="division-work" style="display:none"><div class="division-equation" id="divisionEquation"></div><div class="division-history" id="divisionHistory"></div><div class="division-prompt" id="divisionPrompt"></div><input class="division-input" id="divisionInput" inputmode="numeric" autocomplete="off" aria-label="Nächsten Rechenschritt eingeben"><p class="division-progress" id="divisionProgress"></p></div><div class="digit-grid" id="writtenGrid"></div><input id="writtenEntry" style="display:none" inputmode="text" aria-label="Quotient und Rest" placeholder="Quotient"><div class="written-message" id="writtenMessage" aria-live="polite"></div><div class="written-actions"><button id="writtenCheck">✓ Zeile prüfen</button><button id="writtenContinue" hidden>Nächster Rechenschritt →</button></div></div>
 <div class="feedback" id="feedback" aria-live="polite"></div>
 <button class="action" id="check">✓ Überprüfen</button><button class="action secondary" id="tip">💡 Tipp</button><button class="action secondary" id="next" hidden>Nächste Aufgabe →</button>
 <button class="action secondary" id="menu">↩ Übungsart wechseln</button>
@@ -113,7 +120,7 @@ function gridRow(label,number,width,editable=false){
   const cell=document.createElement('div');cell.className='digit-cell'+(editable?' answer':'');
   if(i===0&&label){cell.classList.add('label');cell.textContent=label;row.appendChild(cell);continue}
   const idx=i-pad;
-  if(editable){
+  if(editable && i>0){
    const input=document.createElement('input');input.type='text';input.inputMode='numeric';input.maxLength=1;input.autocomplete='off';input.setAttribute('aria-label','Ziffer '+i);
    input.dataset.pos=String(i);input.addEventListener('input',()=>{input.value=input.value.replace(/\D/g,'').slice(0,1);if(input.value){let all=[...$('writtenGrid').querySelectorAll('input:not(:disabled)')];let next=all[all.indexOf(input)+1];if(next)next.focus()}});
    input.addEventListener('keydown',e=>{if(e.key==='Backspace'&&!input.value){let all=[...$('writtenGrid').querySelectorAll('input:not(:disabled)')];let prev=all[all.indexOf(input)-1];if(prev)prev.focus()}if(e.key==='Enter')checkWritten()});
@@ -133,22 +140,38 @@ function newWritten(){
   while(t>0){const d=t%10;steps.push({label:'Teilprodukt '+(shift+1),value:a*d*10**shift,help:'Multipliziere '+a+' mit '+d+' und beachte '+shift+' angehängte Null(en).'});t=Math.floor(t/10);shift++}
   steps.push({label:'Gesamtprodukt',value:a*b,help:'Addiere die Teilprodukte stellenrichtig.'});
  }else{
-  // Show division in school-style chunks, with one intermediate subtraction per quotient digit.
-  const chars=String(a).split('').map(Number);let rem=0;
-  for(let i=0;i<chars.length;i++){rem=rem*10+chars[i];const digit=Math.floor(rem/b);const sub=digit*b;const newRem=rem-sub;
-   if(i===0&&digit===0) {rem=newRem;continue}
-   steps.push({label:'Schritt '+(steps.length+1)+': '+rem+' − '+sub,value:newRem,help:'Teile '+rem+' durch '+b+': '+digit+'-mal. Ziehe '+sub+' ab. Rest '+newRem+'.'});
-   rem=newRem
+  // Jede Quotientenziffer und jeder Abzug werden einzeln eingegeben.
+  const chars=String(a).split('').map(Number);let remainder=0,started=false,position=0;
+  for(const digit of chars){
+   remainder=remainder*10+digit;
+   if(!started && remainder<b)continue;
+   started=true;
+   const q=Math.floor(remainder/b),subtract=q*b,after=remainder-subtract;
+   steps.push({label:"Quotientenziffer",value:q,help:"Wie oft passt "+b+" in "+remainder+"?",prompt:"Wie oft passt "+b+" in "+remainder+"?",history:""+remainder+" : "+b+" → ?"});
+   steps.push({label:"Abziehen",value:subtract,help:"Multipliziere "+q+" · "+b+".",prompt:"Rechne "+q+" · "+b+". Welche Zahl ziehst du ab?",history:"− ?"});
+   steps.push({label:"Rest",value:after,help:"Rechne "+remainder+" − "+subtract+".",prompt:"Wie viel bleibt nach dem Abziehen übrig?",history:"Rest: ?"});
+   remainder=after;position++;
   }
-  steps.push({label:'Quotient'+(task.rest?' mit Rest':''),value:task.rest?String(task.answer)+' R '+task.rest:task.answer,help:'Setze die Quotientenziffern zusammen. Bei Rest: Quotient R Rest.'});
+  steps.push({label:"Endergebnis",value:task.rest?String(task.answer)+"R"+task.rest:String(task.answer),help:"Schreibe den vollständigen Quotienten"+(task.rest?" und den Rest":"")+".",prompt:"Wie lautet das vollständige Ergebnis?",history:"Ergebnis: ?"});
+
  }
  ws={steps,at:0,a,b,wrong:0};
  $('writtenBoard').style.display='block';$('entry').hidden=true;$('choices').hidden=true;$('check').hidden=true;$('tip').hidden=true;$('next').hidden=true;
  $('writtenTask').textContent=task.question;
+ $('divisionWork').style.display=OP==='div'?'block':'none';$('writtenGrid').style.display=OP==='div'?'none':'grid';
  renderWritten();
 }
 function renderWritten(){
  const w=ws,step=w.steps[w.at];
+ if(OP==='div'){
+  $('writtenStep').textContent='Schritt '+(w.at+1)+' von '+w.steps.length+' · '+step.label;
+  $('divisionEquation').textContent=w.a.toLocaleString('de-DE')+' : '+w.b+' = ?';
+  $('divisionHistory').textContent=w.steps.slice(0,w.at).map(x=>x.label+': '+x.value).join('\n') || 'Beginne mit der ersten passenden Zahl von links.';
+  $('divisionPrompt').textContent=step.prompt;
+  $('divisionInput').value='';$('divisionInput').placeholder=step.label==='Endergebnis'?'z. B. 236 R 2':'Zahl eingeben';
+  $('divisionProgress').textContent='Alle Rechenschritte werden nacheinander geprüft.';
+  $('writtenMessage').textContent='';$('divisionInput').focus();return;
+ }
  $('writtenStep').textContent='Schritt '+(w.at+1)+' von '+w.steps.length+': '+step.label;
  const maxLen=Math.max(String(w.a).length,String(w.b).length,...w.steps.map(x=>String(x.value).replace(/\D/g,'').length));
  const cols=Math.max(6,maxLen+2);
@@ -178,7 +201,7 @@ function checkWritten(){
  const expected=String(step.value).replace(/\s+/g,'').toUpperCase();
  if(given===expected){
   $('writtenMessage').textContent='✅ Richtig! Gut gemacht.';$('writtenMessage').style.color='#19754c';
-  [...$('writtenGrid').querySelectorAll('input')].forEach(x=>{x.disabled=true;x.parentElement.classList.add('correct')});
+  if(OP!=='div')[...$('writtenGrid').querySelectorAll('input')].forEach(x=>{x.disabled=true;x.parentElement.classList.add('correct')});
   $('writtenCheck').disabled=true;$('writtenContinue').hidden=false;
  }else{
   ws.wrong++;$('writtenMessage').textContent='❌ Noch nicht richtig. Prüfe die Stellenwerte. '+(ws.wrong>=2?step.help:'');
@@ -192,6 +215,7 @@ function continueWritten(){
   $('writtenCheck').hidden=true;$('writtenContinue').hidden=true;$('next').hidden=false;
  }else renderWritten();
 }
+$('divisionInput').addEventListener('keydown',e=>{if(e.key==='Enter')checkWritten()});
 $('writtenCheck').onclick=checkWritten;
 $('writtenContinue').onclick=continueWritten;
 </script></body></html>

@@ -113,7 +113,7 @@ function gridRow(label,number,width,editable=false){
   const cell=document.createElement('div');cell.className='digit-cell'+(editable?' answer':'');
   if(i===0&&label){cell.classList.add('label');cell.textContent=label;row.appendChild(cell);continue}
   const idx=i-pad;
-  if(editable){
+  if(editable && i>0){
    const input=document.createElement('input');input.type='text';input.inputMode='numeric';input.maxLength=1;input.autocomplete='off';input.setAttribute('aria-label','Ziffer '+i);
    input.dataset.pos=String(i);input.addEventListener('input',()=>{input.value=input.value.replace(/\D/g,'').slice(0,1);if(input.value){let all=[...$('writtenGrid').querySelectorAll('input:not(:disabled)')];let next=all[all.indexOf(input)+1];if(next)next.focus()}});
    input.addEventListener('keydown',e=>{if(e.key==='Backspace'&&!input.value){let all=[...$('writtenGrid').querySelectorAll('input:not(:disabled)')];let prev=all[all.indexOf(input)-1];if(prev)prev.focus()}if(e.key==='Enter')checkWritten()});
