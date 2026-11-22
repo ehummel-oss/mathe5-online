@@ -1,0 +1,90 @@
+<!doctype html><html lang="de"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Multiplikation – Mathe 5</title><style>
+*{box-sizing:border-box}body{margin:0;background:linear-gradient(130deg,#eaf5ff,#fff8e9);color:#193c53;font-family:"Century Gothic",Arial,sans-serif}main{max-width:920px;margin:auto;padding:24px 15px}
+a.back{display:inline-block;background:white;border:2px solid #bed7e5;border-radius:12px;padding:11px 17px;text-decoration:none;color:#193c53;font-weight:bold;margin-bottom:15px}
+header{background:#193d58;color:white;padding:27px;border-radius:24px}h1{font-size:clamp(26px,5vw,41px);margin:0}header p{color:#d9edf7}
+.box{background:white;border:2px solid #d3e5ee;border-radius:22px;padding:24px;margin:18px 0;box-shadow:0 8px 18px #16415a16}
+.modes{display:grid;grid-template-columns:repeat(3,1fr);gap:13px}.mode{border:3px solid #bed9e6;background:#f3faff;border-radius:18px;cursor:pointer;padding:19px 10px;min-height:124px;font:800 17px "Century Gothic",Arial}.mode .em{display:block;font-size:33px;margin-bottom:8px}.mode:hover,.mode:focus-visible{background:#fff2cb;outline:2px solid #c99830}
+#exercise{display:none}.bar{height:13px;border-radius:12px;background:#e2edf3;overflow:hidden;margin:12px 0}.fill{height:100%;width:0;background:#39a98a;transition:width .3s}
+.task{font-size:clamp(24px,4vw,35px);font-weight:900;margin:20px 0;white-space:pre-wrap}
+input{font:800 23px "Century Gothic",Arial;border:3px solid #93bccc;border-radius:12px;padding:13px;width:100%;max-width:400px}input:focus-visible{outline:3px solid #e8b84e}
+button.action{font:800 16px "Century Gothic",Arial;border:0;border-radius:12px;padding:13px 19px;background:#1a729a;color:white;cursor:pointer;margin:8px 8px 0 0}
+button.secondary{background:#ffe2a0;color:#183b51}button:disabled{opacity:.5;cursor:default}
+.feedback{font-size:18px;font-weight:800;min-height:40px;margin-top:13px}.pill{background:#fff0bf;border-radius:99px;padding:8px 12px;display:inline-block;font-weight:800}
+.small{font-size:14px;color:#547185}.choices{display:grid;grid-template-columns:repeat(2,1fr);gap:12px}.choice{border:2px solid #8dbacb;background:#f5fbff;border-radius:12px;padding:15px;font:800 17px "Century Gothic",Arial;cursor:pointer}
+#end{display:none;text-align:center}.endemoji{font-size:70px}
+@media(max-width:600px){.modes,.choices{grid-template-columns:1fr}.box{padding:16px}}
+.knowledge{background:#fff9e9;border:3px solid #efd49b}.knowledge p{line-height:1.65}.knowledge .danger{background:#ffe8e8;border-left:5px solid #d54242;padding:12px;border-radius:9px}.mode[data-mode="rules"]{background:#fff1cb}@media(min-width:601px){.modes{grid-template-columns:repeat(2,1fr)}}</style></head><body><main><a class="back" href="lernbereich-2.html">← Zurück zu den Rechenarten</a><header><h1>✖️ Multiplikation</h1><p>Lernbereich II · Mathematik 5 · Wähle eine Übungsart!</p></header>
+<section class="box knowledge"><h2>✖️ Merkwissen: Multiplikation</h2><p><strong>23 · 5 = 115</strong><br>23 = 1. Faktor · 5 = 2. Faktor · 115 = Produkt</p><p>🔁 <strong>Vertauschungsgesetz:</strong> 4 · 7 = 7 · 4</p><p>🧩 <strong>Klammergesetz:</strong> (2 · 3) · 5 = 2 · (3 · 5)</p><p>✏️ <strong>Schriftlich:</strong> Teilprodukte stellenrichtig untereinander schreiben und addieren. Vorher mit einem Überschlag prüfen.</p></section><section class="box" id="select"><h2>🎯 Was möchtest du üben?</h2><div class="modes">
+<button class="mode" data-mode="mental"><span class="em">🧠</span>Kopfrechnen</button>
+<button class="mode" data-mode="terms"><span class="em">📚</span>Fachbegriffe</button>
+<button class="mode" data-mode="written"><span class="em">✏️</span>Schriftlich rechnen</button><button class="mode" data-mode="rules"><span class="em">🧩</span>Merkwissen testen</button></div><p class="small">Je Runde 10 Aufgaben. Bei Fehlern bekommst du einen Tipp und darfst es noch einmal versuchen.</p></section>
+<section class="box" id="exercise"><div><span class="pill" id="status">Aufgabe 1 / 10</span><span class="pill" id="score">0 ⭐</span></div><div class="bar"><div class="fill" id="fill"></div></div>
+<h2 id="modeTitle"></h2><div class="task" id="task"></div><div id="entry"><input id="answer" inputmode="numeric" autocomplete="off" aria-label="Ergebnis eingeben" placeholder="Ergebnis eingeben"></div><div class="choices" id="choices" hidden></div>
+<div class="feedback" id="feedback" aria-live="polite"></div>
+<button class="action" id="check">✓ Überprüfen</button><button class="action secondary" id="tip">💡 Tipp</button><button class="action secondary" id="next" hidden>Nächste Aufgabe →</button>
+<button class="action secondary" id="menu">↩ Übungsart wechseln</button>
+<p class="small" id="writeHint">Schriftliche Aufgaben bitte mit Überträgen oder Entbündeln ins Heft rechnen.</p></section>
+<section class="box" id="end"><div class="endemoji">🏆</div><h2>Super gemacht!</h2><p id="endText"></p><button class="action" id="again">🔁 Neue Aufgaben</button><button class="action secondary" id="endMenu">← Übungsart wählen</button></section>
+</main><script>
+const OP="mul";
+const $=id=>document.getElementById(id);
+const random=(min,max)=>Math.floor(Math.random()*(max-min+1))+min;
+const names={sub:{mental:"Kopfrechnen: Subtraktion",terms:"Fachbegriffe der Subtraktion",written:"Schriftlich subtrahieren",rules:"Merkwissen: Subtraktion"},mul:{mental:"Kopfrechnen: Multiplikation",terms:"Fachbegriffe der Multiplikation",written:"Schriftlich multiplizieren",rules:"Merkwissen: Multiplikation"},div:{mental:"Kopfrechnen: Division",terms:"Fachbegriffe der Division",written:"Schriftlich dividieren",rules:"Merkwissen: Division"}};
+let mode="",index=0,points=0,task=null,tries=0,locked=false;
+const RULES=[["Welches Gesetz zeigt 6 · 4 = 4 · 6?","Vertauschungsgesetz",["Klammergesetz", "Teilungsgesetz", "Minusgesetz"]],["Welches Gesetz zeigt (2 · 3) · 5 = 2 · (3 · 5)?","Klammergesetz",["Vertauschungsgesetz", "Minusgesetz", "Nullregel"]],["Wie heißt das Ergebnis einer Multiplikation?","Produkt",["Summe", "Differenz", "Quotient"]],["Wie heißen die beiden Zahlen bei 23 · 5?","Faktoren",["Summanden", "Divisoren", "Differenzen"]],["Was hilft vor einer schriftlichen Multiplikation?","Überschlag",["Zahlen vertauschen und abziehen", "Ergebnis raten", "Durch null teilen"]]];
+const shuffle=a=>{for(let i=a.length-1;i>0;i--){const j=random(0,i);[a[i],a[j]]=[a[j],a[i]]}return a};
+function makeTask(){
+ if(mode==="terms"||mode==="rules"){
+ const sets={
+ sub:[["Wie heißt die erste Zahl bei einer Subtraktion?","Minuend",["Subtrahend","Differenz","Summand"]],["Wie heißt die Zahl, die abgezogen wird?","Subtrahend",["Minuend","Differenz","Faktor"]],["Wie heißt das Ergebnis einer Subtraktion?","Differenz",["Summe","Produkt","Quotient"]],["Bei 28 − 9 = 19: Wie heißt die 28?","Minuend",["Subtrahend","Differenz","Quotient"]],["Bei 28 − 9 = 19: Wie heißt die 9?","Subtrahend",["Minuend","Differenz","Faktor"]]],
+ mul:[["Wie heißen die Zahlen, die miteinander multipliziert werden?","Faktoren",["Summanden","Divisoren","Differenzen"]],["Wie heißt das Ergebnis einer Multiplikation?","Produkt",["Summe","Differenz","Quotient"]],["Bei 6 · 8 = 48: Wie heißt die 6?","Faktor",["Produkt","Quotient","Summand"]],["Bei 6 · 8 = 48: Wie heißt die 48?","Produkt",["Faktor","Differenz","Dividend"]],["Was bedeutet „multiplizieren“?","Malnehmen",["Teilen","Abziehen","Addieren"]]],
+ div:[["Wie heißt die Zahl, die geteilt wird?","Dividend",["Divisor","Quotient","Produkt"]],["Wie heißt die Zahl, durch die geteilt wird?","Divisor",["Dividend","Quotient","Summand"]],["Wie heißt das Ergebnis einer Division ohne Rest?","Quotient",["Differenz","Produkt","Summe"]],["Bei 56 : 7 = 8: Wie heißt die 56?","Dividend",["Divisor","Quotient","Faktor"]],["Bei 56 : 7 = 8: Wie heißt die 7?","Divisor",["Dividend","Quotient","Produkt"]]]
+ };
+ const item=mode==="rules"?RULES[index%RULES.length]:sets[OP][index%sets[OP].length];return {question:item[0],answer:item[1],options:shuffle([item[1],...item[2]]),hint:"Überlege, welche Rolle die Zahl in der Rechnung hat."};
+ }
+ let a,b,result,hint,question,rest=0;
+ if(OP==="sub"){
+ if(mode==="mental"){a=random(30,300);b=random(5,a-1)}
+ else {a=random(1200,95000);b=random(101,a-1);if(a%10>=b%10)b=b+1<a?b+1:b}
+ result=a-b;question=`${a.toLocaleString("de-DE")} − ${b.toLocaleString("de-DE")} = ?`;
+ hint=mode==="mental"?"Rechne zuerst die Zehner oder Hunderter, dann die Einer.":"Schreibe die Stellenwerte genau untereinander. Falls nötig: Entbündle einen Zehner, Hunderter oder Tausender.";
+ }else if(OP==="mul"){
+ if(mode==="mental"){a=random(3,18);b=random(3,12)}
+ else {a=random(112,3964);b=random(12,89)}
+ result=a*b;question=`${a.toLocaleString("de-DE")} · ${b.toLocaleString("de-DE")} = ?`;
+ hint=mode==="mental"?"Zerlege einen Faktor geschickt und nutze das Einmaleins.":"Multipliziere mit jeder Ziffer des zweiten Faktors und addiere die passend verschobenen Teilergebnisse.";
+ }else{
+ if(mode==="mental"){b=random(2,12);result=random(3,15);a=b*result}
+ else{b=random(2,12);result=random(101,1200);rest=index%3===0?random(1,b-1):0;a=b*result+rest}
+ question=`${a.toLocaleString("de-DE")} : ${b} = ?`;
+ hint=mode==="mental"?"Nutze die Umkehraufgabe der Multiplikation.":"Teile Schritt für Schritt von links nach rechts und prüfe mit Divisor · Quotient + Rest.";
+ }
+ return {question,answer:result,rest,hint};
+}
+function start(m){mode=m;index=0;points=0;$("select").hidden=true;$("select").style.display="none";$("end").style.display="none";$("exercise").style.display="block";$("modeTitle").textContent=names[OP][mode];newTask()}
+function newTask(){
+ task=makeTask();tries=0;locked=false;$("status").textContent=`Aufgabe ${index+1} / 10`;$("score").textContent=`${points} ⭐`;$("fill").style.width=(index/10*100)+"%";$("task").textContent=task.question;$("feedback").textContent="";$("answer").value="";$("next").hidden=true;$("check").hidden=false;$("tip").hidden=false;
+ $("writeHint").style.display=mode==="written"?"block":"none";
+ $("entry").hidden=(mode==="terms"||mode==="rules");$("choices").hidden=!(mode==="terms"||mode==="rules");
+ if(mode==="terms"||mode==="rules"){$("choices").innerHTML="";task.options.forEach(value=>{const b=document.createElement("button");b.className="choice";b.textContent=value;b.onclick=()=>verify(value);$("choices").appendChild(b)})}
+ else{$("answer").placeholder=task.rest?"Quotient, z. B. 123 Rest 2":"Ergebnis eingeben";$("answer").focus()}
+}
+function verify(raw){
+ if(locked)return;
+ let good=false;
+ if(mode==="terms"||mode==="rules")good=raw===task.answer;
+ else{
+ const value=String(raw).trim().replace(/\s/g,"").replace(/\./g,"");
+ if(task.rest){const m=value.match(/^(\d+)(?:r|rest|R|Rest|,)(\d+)$/i);good=!!m&&Number(m[1])===task.answer&&Number(m[2])===task.rest}
+ else good=/^\d+$/.test(value)&&Number(value)===task.answer;
+ }
+ if(good){locked=true;points++;$("score").textContent=`${points} ⭐`;$("feedback").textContent="🎉 Richtig! Klasse gerechnet!";$("feedback").style.color="#137a50";$("next").hidden=false;$("check").hidden=true;$("tip").hidden=true}
+ else{tries++;$("feedback").style.color="#b1453d";$("feedback").textContent=tries>=2?"Noch nicht. 💡 "+task.hint:"Fast! Prüfe deine Rechnung und versuche es erneut."}
+}
+function next(){index++;if(index>=10){$("exercise").style.display="none";$("end").style.display="block";$("endText").textContent=`Du hast ${points} von 10 Aufgaben gelöst. Weiter so!`;$("fill").style.width="100%"}else newTask()}
+function menu(){$("exercise").style.display="none";$("end").style.display="none";$("select").hidden=false;$("select").style.display="block"}
+document.querySelectorAll("[data-mode]").forEach(b=>b.onclick=()=>start(b.dataset.mode));
+$("check").onclick=()=>verify($("answer").value);$("answer").addEventListener("keydown",e=>{if(e.key==="Enter"){if(locked)next();else verify($("answer").value)}});
+$("next").onclick=next;$("tip").onclick=()=>{$("feedback").style.color="#345f8a";$("feedback").textContent="💡 "+task.hint};$("menu").onclick=menu;$("again").onclick=()=>start(mode);$("endMenu").onclick=menu;
+</script></body></html>
