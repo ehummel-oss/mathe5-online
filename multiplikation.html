@@ -14,13 +14,26 @@ button.secondary{background:#ffe2a0;color:#183b51}button:disabled{opacity:.5;cur
 .small{font-size:14px;color:#547185}.choices{display:grid;grid-template-columns:repeat(2,1fr);gap:12px}.choice{border:2px solid #8dbacb;background:#f5fbff;border-radius:12px;padding:15px;font:800 17px "Century Gothic",Arial;cursor:pointer}
 #end{display:none;text-align:center}.endemoji{font-size:70px}
 @media(max-width:600px){.modes,.choices{grid-template-columns:1fr}.box{padding:16px}}
-.knowledge{background:#fff9e9;border:3px solid #efd49b}.knowledge p{line-height:1.65}.knowledge .danger{background:#ffe8e8;border-left:5px solid #d54242;padding:12px;border-radius:9px}.mode[data-mode="rules"]{background:#fff1cb}@media(min-width:601px){.modes{grid-template-columns:repeat(2,1fr)}}</style></head><body><main><a class="back" href="lernbereich-2.html">← Zurück zu den Rechenarten</a><header><h1>✖️ Multiplikation</h1><p>Lernbereich II · Mathematik 5 · Wähle eine Übungsart!</p></header>
+.knowledge{background:#fff9e9;border:3px solid #efd49b}.knowledge p{line-height:1.65}.knowledge .danger{background:#ffe8e8;border-left:5px solid #d54242;padding:12px;border-radius:9px}.mode[data-mode="rules"]{background:#fff1cb}@media(min-width:601px){.modes{grid-template-columns:repeat(2,1fr)}}
+.written-board{display:none;background:#f6fbff;border:2px solid #b4d2e2;border-radius:18px;padding:16px;margin:14px 0;overflow-x:auto}
+.written-board h3{margin:4px 0 12px}
+.digit-grid{display:grid;grid-template-columns:repeat(var(--cols),minmax(30px,43px));gap:2px;width:max-content;max-width:100%;margin:12px auto;font-family:Consolas,monospace}
+.digit-cell{height:45px;min-width:30px;border:1px solid #b4c9da;background:white;display:flex;align-items:center;justify-content:center;font-size:22px;font-weight:800;border-radius:3px}
+.digit-cell.label{background:#e4f0f8;color:#295a7b}.digit-cell.answer{padding:0;border:2px solid #5596bc;background:#fffce9}
+.digit-cell.answer input{width:100%;height:100%;min-width:0;border:0;background:transparent;text-align:center;font:800 22px Consolas,monospace;padding:0;border-radius:0}
+.digit-cell.correct{background:#d4f5dd;border-color:#248b51}.digit-cell.incorrect{background:#ffe0e0;border-color:#c94c4c}
+.written-step{background:#fff1cc;padding:10px;border-radius:10px;font-weight:700;margin:12px 0}
+.written-actions{display:flex;gap:8px;flex-wrap:wrap}
+.written-actions button{background:#1a729a;color:white;border:0;border-radius:10px;padding:11px 14px;font:800 15px "Century Gothic",Arial;cursor:pointer}
+.written-actions button:disabled{opacity:.4}
+.written-message{min-height:28px;font-weight:800;margin-top:10px}
+</style></head><body><main><a class="back" href="lernbereich-2.html">← Zurück zu den Rechenarten</a><header><h1>✖️ Multiplikation</h1><p>Lernbereich II · Mathematik 5 · Wähle eine Übungsart!</p></header>
 <section class="box knowledge"><h2>✖️ Merkwissen: Multiplikation</h2><p><strong>23 · 5 = 115</strong><br>23 = 1. Faktor · 5 = 2. Faktor · 115 = Produkt</p><p>🔁 <strong>Vertauschungsgesetz:</strong> 4 · 7 = 7 · 4</p><p>🧩 <strong>Klammergesetz:</strong> (2 · 3) · 5 = 2 · (3 · 5)</p><p>✏️ <strong>Schriftlich:</strong> Teilprodukte stellenrichtig untereinander schreiben und addieren. Vorher mit einem Überschlag prüfen.</p></section><section class="box" id="select"><h2>🎯 Was möchtest du üben?</h2><div class="modes">
 <button class="mode" data-mode="mental"><span class="em">🧠</span>Kopfrechnen</button>
 <button class="mode" data-mode="terms"><span class="em">📚</span>Fachbegriffe</button>
 <button class="mode" data-mode="written"><span class="em">✏️</span>Schriftlich rechnen</button><button class="mode" data-mode="rules"><span class="em">🧩</span>Merkwissen testen</button></div><p class="small">Je Runde 10 Aufgaben. Bei Fehlern bekommst du einen Tipp und darfst es noch einmal versuchen.</p></section>
 <section class="box" id="exercise"><div><span class="pill" id="status">Aufgabe 1 / 10</span><span class="pill" id="score">0 ⭐</span></div><div class="bar"><div class="fill" id="fill"></div></div>
-<h2 id="modeTitle"></h2><div class="task" id="task"></div><div id="entry"><input id="answer" inputmode="numeric" autocomplete="off" aria-label="Ergebnis eingeben" placeholder="Ergebnis eingeben"></div><div class="choices" id="choices" hidden></div>
+<h2 id="modeTitle"></h2><div class="task" id="task"></div><div id="entry"><input id="answer" inputmode="numeric" autocomplete="off" aria-label="Ergebnis eingeben" placeholder="Ergebnis eingeben"></div><div class="choices" id="choices" hidden></div><div class="written-board" id="writtenBoard"><h3>✏️ Rechne direkt hier auf dem Bildschirm</h3><div class="small">Trage die Ziffern in die Kästchen ein. Du brauchst kein Heft.</div><p id="writtenTask"></p><div class="written-step" id="writtenStep"></div><div class="digit-grid" id="writtenGrid"></div><input id="writtenEntry" style="display:none" inputmode="text" aria-label="Quotient und Rest" placeholder="Quotient"><div class="written-message" id="writtenMessage" aria-live="polite"></div><div class="written-actions"><button id="writtenCheck">✓ Zeile prüfen</button><button id="writtenContinue" hidden>Nächster Rechenschritt →</button></div></div>
 <div class="feedback" id="feedback" aria-live="polite"></div>
 <button class="action" id="check">✓ Überprüfen</button><button class="action secondary" id="tip">💡 Tipp</button><button class="action secondary" id="next" hidden>Nächste Aufgabe →</button>
 <button class="action secondary" id="menu">↩ Übungsart wechseln</button>
@@ -60,15 +73,17 @@ function makeTask(){
  question=`${a.toLocaleString("de-DE")} : ${b} = ?`;
  hint=mode==="mental"?"Nutze die Umkehraufgabe der Multiplikation.":"Teile Schritt für Schritt von links nach rechts und prüfe mit Divisor · Quotient + Rest.";
  }
- return {question,answer:result,rest,hint};
+ return {question,answer:result,rest,hint,a,b};
 }
 function start(m){mode=m;index=0;points=0;$("select").hidden=true;$("select").style.display="none";$("end").style.display="none";$("exercise").style.display="block";$("modeTitle").textContent=names[OP][mode];newTask()}
 function newTask(){
+ $("writtenBoard").style.display="none";$("writtenCheck").hidden=false;$("writtenCheck").disabled=false;
  task=makeTask();tries=0;locked=false;$("status").textContent=`Aufgabe ${index+1} / 10`;$("score").textContent=`${points} ⭐`;$("fill").style.width=(index/10*100)+"%";$("task").textContent=task.question;$("feedback").textContent="";$("answer").value="";$("next").hidden=true;$("check").hidden=false;$("tip").hidden=false;
  $("writeHint").style.display=mode==="written"?"block":"none";
  $("entry").hidden=(mode==="terms"||mode==="rules");$("choices").hidden=!(mode==="terms"||mode==="rules");
  if(mode==="terms"||mode==="rules"){$("choices").innerHTML="";task.options.forEach(value=>{const b=document.createElement("button");b.className="choice";b.textContent=value;b.onclick=()=>verify(value);$("choices").appendChild(b)})}
  else{$("answer").placeholder=task.rest?"Quotient, z. B. 123 Rest 2":"Ergebnis eingeben";$("answer").focus()}
+ if(mode==="written")newWritten();
 }
 function verify(raw){
  if(locked)return;
@@ -87,4 +102,96 @@ function menu(){$("exercise").style.display="none";$("end").style.display="none"
 document.querySelectorAll("[data-mode]").forEach(b=>b.onclick=()=>start(b.dataset.mode));
 $("check").onclick=()=>verify($("answer").value);$("answer").addEventListener("keydown",e=>{if(e.key==="Enter"){if(locked)next();else verify($("answer").value)}});
 $("next").onclick=next;$("tip").onclick=()=>{$("feedback").style.color="#345f8a";$("feedback").textContent="💡 "+task.hint};$("menu").onclick=menu;$("again").onclick=()=>start(mode);$("endMenu").onclick=menu;
+
+let ws=null;
+function digitsOf(n){return String(n).split('').map(Number)}
+function gridRow(label,number,width,editable=false){
+ const row=document.createElement('div');row.style.display='contents';
+ const str=number===null?'':String(number);
+ const pad=Math.max(0,width-str.length);
+ for(let i=0;i<width;i++){
+  const cell=document.createElement('div');cell.className='digit-cell'+(editable?' answer':'');
+  if(i===0&&label){cell.classList.add('label');cell.textContent=label;row.appendChild(cell);continue}
+  const idx=i-pad;
+  if(editable){
+   const input=document.createElement('input');input.type='text';input.inputMode='numeric';input.maxLength=1;input.autocomplete='off';input.setAttribute('aria-label','Ziffer '+i);
+   input.dataset.pos=String(i);input.addEventListener('input',()=>{input.value=input.value.replace(/\D/g,'').slice(0,1);if(input.value){let all=[...$('writtenGrid').querySelectorAll('input:not(:disabled)')];let next=all[all.indexOf(input)+1];if(next)next.focus()}});
+   input.addEventListener('keydown',e=>{if(e.key==='Backspace'&&!input.value){let all=[...$('writtenGrid').querySelectorAll('input:not(:disabled)')];let prev=all[all.indexOf(input)-1];if(prev)prev.focus()}if(e.key==='Enter')checkWritten()});
+   cell.appendChild(input);
+  }else if(idx>=0){cell.textContent=str[idx]}
+  row.appendChild(cell)
+ }
+ return row;
+}
+function newWritten(){
+ const a=task.a,b=task.b;
+ let steps=[];
+ if(OP==='sub'){
+  steps=[{label:'Ergebnis',value:a-b,prefix:'−',help:'Rechne von rechts nach links. Wenn nötig, entbündle einen Zehner.'}];
+ }else if(OP==='mul'){
+  let t=b,shift=0;
+  while(t>0){const d=t%10;steps.push({label:'Teilprodukt '+(shift+1),value:a*d*10**shift,help:'Multipliziere '+a+' mit '+d+' und beachte '+shift+' angehängte Null(en).'});t=Math.floor(t/10);shift++}
+  steps.push({label:'Gesamtprodukt',value:a*b,help:'Addiere die Teilprodukte stellenrichtig.'});
+ }else{
+  // Show division in school-style chunks, with one intermediate subtraction per quotient digit.
+  const chars=String(a).split('').map(Number);let rem=0;
+  for(let i=0;i<chars.length;i++){rem=rem*10+chars[i];const digit=Math.floor(rem/b);const sub=digit*b;const newRem=rem-sub;
+   if(i===0&&digit===0) {rem=newRem;continue}
+   steps.push({label:'Schritt '+(steps.length+1)+': '+rem+' − '+sub,value:newRem,help:'Teile '+rem+' durch '+b+': '+digit+'-mal. Ziehe '+sub+' ab. Rest '+newRem+'.'});
+   rem=newRem
+  }
+  steps.push({label:'Quotient'+(task.rest?' mit Rest':''),value:task.rest?String(task.answer)+' R '+task.rest:task.answer,help:'Setze die Quotientenziffern zusammen. Bei Rest: Quotient R Rest.'});
+ }
+ ws={steps,at:0,a,b,wrong:0};
+ $('writtenBoard').style.display='block';$('entry').hidden=true;$('choices').hidden=true;$('check').hidden=true;$('tip').hidden=true;$('next').hidden=true;
+ $('writtenTask').textContent=task.question;
+ renderWritten();
+}
+function renderWritten(){
+ const w=ws,step=w.steps[w.at];
+ $('writtenStep').textContent='Schritt '+(w.at+1)+' von '+w.steps.length+': '+step.label;
+ const maxLen=Math.max(String(w.a).length,String(w.b).length,...w.steps.map(x=>String(x.value).replace(/\D/g,'').length));
+ const cols=Math.max(6,maxLen+2);
+ const grid=$('writtenGrid');grid.replaceChildren();grid.style.setProperty('--cols',cols);
+ grid.appendChild(gridRow('',w.a,cols));
+ grid.appendChild(gridRow(OP==='sub'?'−':OP==='mul'?'×':':',w.b,cols));
+ for(let j=0;j<w.at;j++){const prior=w.steps[j];grid.appendChild(gridRow(j===w.steps.length-1?'=':'',String(prior.value).replace(/\s*R\s*/,'R'),cols))}
+ if(OP==='div'&&w.at===w.steps.length-1){
+  $('writtenStep').textContent+=' (Quotient und Rest eingeben)';
+  $('writtenEntry').style.display='block';$('writtenEntry').value='';$('writtenEntry').placeholder='z. B. 236 oder 236 R 2';
+  grid.appendChild(gridRow('',null,cols,false))
+ }else{
+  $('writtenEntry').style.display='none';
+  grid.appendChild(gridRow('=',null,cols,true));
+ }
+ $('writtenMessage').textContent='';
+ const first=grid.querySelector('input');if(first)first.focus();else $('writtenEntry').focus();
+}
+function checkWritten(){
+ if(!ws)return;
+ const step=ws.steps[ws.at];let given='';
+ if(OP==='div'&&ws.at===ws.steps.length-1)given=$('writtenEntry').value.trim().replace(/\s+/g,'').toUpperCase();
+ else {
+  const fields=[...$('writtenGrid').querySelectorAll('input')];
+  given=fields.map(x=>x.value||' ').join('').trim().replace(/\s/g,'');
+ }
+ const expected=String(step.value).replace(/\s+/g,'').toUpperCase();
+ if(given===expected){
+  $('writtenMessage').textContent='✅ Richtig! Gut gemacht.';$('writtenMessage').style.color='#19754c';
+  [...$('writtenGrid').querySelectorAll('input')].forEach(x=>{x.disabled=true;x.parentElement.classList.add('correct')});
+  $('writtenCheck').disabled=true;$('writtenContinue').hidden=false;
+ }else{
+  ws.wrong++;$('writtenMessage').textContent='❌ Noch nicht richtig. Prüfe die Stellenwerte. '+(ws.wrong>=2?step.help:'');
+  $('writtenMessage').style.color='#b1453d'
+ }
+}
+function continueWritten(){
+ ws.at++;ws.wrong=0;$('writtenCheck').disabled=false;$('writtenContinue').hidden=true;
+ if(ws.at>=ws.steps.length){
+  locked=true;points++;$('score').textContent=points+' ⭐';$('writtenMessage').textContent='🎉 Ganze Aufgabe geschafft!';$('writtenStep').textContent='Alle Rechenschritte gelöst!';
+  $('writtenCheck').hidden=true;$('writtenContinue').hidden=true;$('next').hidden=false;
+ }else renderWritten();
+}
+$('writtenCheck').onclick=checkWritten;
+$('writtenContinue').onclick=continueWritten;
 </script></body></html>
