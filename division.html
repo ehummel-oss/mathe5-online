@@ -193,13 +193,13 @@ function renderWritten(){
 function checkWritten(){
  if(!ws)return;
  const step=ws.steps[ws.at];let given='';
- if(OP==='div'&&ws.at===ws.steps.length-1)given=$('writtenEntry').value.trim().replace(/\s+/g,'').toUpperCase();
+ if(OP==='div')given=$('divisionInput').value.trim().replace(/\s+/g,'').toUpperCase();
  else {
   const fields=[...$('writtenGrid').querySelectorAll('input')];
   given=fields.map(x=>x.value||' ').join('').trim().replace(/\s/g,'');
  }
  const expected=String(step.value).replace(/\s+/g,'').toUpperCase();
- if(given===expected){
+ if(given===expected || (OP==='div' && step.label==='Endergebnis' && given.replace('REST','R')===expected)){
   $('writtenMessage').textContent='✅ Richtig! Gut gemacht.';$('writtenMessage').style.color='#19754c';
   if(OP!=='div')[...$('writtenGrid').querySelectorAll('input')].forEach(x=>{x.disabled=true;x.parentElement.classList.add('correct')});
   $('writtenCheck').disabled=true;$('writtenContinue').hidden=false;
