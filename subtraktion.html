@@ -28,7 +28,7 @@ button.secondary{background:#ffe2a0;color:#183b51}button:disabled{opacity:.5;cur
 .written-actions button:disabled{opacity:.4}
 .written-message{min-height:28px;font-weight:800;margin-top:10px}
 </style></head><body><main><a class="back" href="lernbereich-2.html">← Zurück zu den Rechenarten</a><header><h1>➖ Subtraktion</h1><p>Lernbereich II · Mathematik 5 · Wähle eine Übungsart!</p></header>
-<section class="box knowledge"><h2>➖ Merkwissen: Subtraktion</h2><p><strong>9867 − 320 = 9547</strong><br>9867 = Minuend · 320 = Subtrahend · 9547 = Differenz</p><p>⚠️ <strong>Nicht vertauschen!</strong> 20 − 5 ist nicht dasselbe wie 5 − 20. Das Vertauschungsgesetz und das Klammergesetz der Addition gelten hier nicht allgemein.</p><p>✏️ <strong>Schriftlich:</strong> Stellen untereinander schreiben, von rechts nach links rechnen und bei Bedarf entbündeln.</p></section><section class="box" id="select"><h2>🎯 Was möchtest du üben?</h2><div class="modes">
+<section class="box" id="select"><h2>🎯 Was möchtest du üben?</h2><div class="modes">
 <button class="mode" data-mode="mental"><span class="em">🧠</span>Kopfrechnen</button>
 <button class="mode" data-mode="terms"><span class="em">📚</span>Fachbegriffe</button>
 <button class="mode" data-mode="written"><span class="em">✏️</span>Schriftlich rechnen</button><button class="mode" data-mode="rules"><span class="em">🧩</span>Merkwissen testen</button></div><p class="small">Je Runde 10 Aufgaben. Bei Fehlern bekommst du einen Tipp und darfst es noch einmal versuchen.</p></section>
@@ -47,15 +47,43 @@ const names={sub:{mental:"Kopfrechnen: Subtraktion",terms:"Fachbegriffe der Subt
 let mode="",index=0,points=0,task=null,tries=0,locked=false;
 const RULES=[["Darf man bei der Subtraktion die Zahlen einfach vertauschen?","Nein",["Ja", "Nur bei geraden Zahlen", "Immer mit Klammern"]],["Wie heißt das Ergebnis einer Subtraktion?","Differenz",["Summe", "Produkt", "Quotient"]],["Was machst du beim schriftlichen Subtrahieren, wenn die obere Ziffer zu klein ist?","Entbündeln",["Zahlen vertauschen", "Einfach addieren", "Die Spalte überspringen"]],["Was ist richtig?","23 − 8 = 15",["8 − 23 = 15", "23 − 8 = 31", "23 − 8 = 13"]],["Welche Rechnung zeigt, dass Vertauschen nicht funktioniert?","12 − 5 ≠ 5 − 12",["4 + 3 = 3 + 4", "2 · 7 = 7 · 2", "8 + 0 = 8"]]];
 const shuffle=a=>{for(let i=a.length-1;i>0;i--){const j=random(0,i);[a[i],a[j]]=[a[j],a[i]]}return a};
-function makeTask(){
- if(mode==="terms"||mode==="rules"){
- const sets={
- sub:[["Wie heißt die erste Zahl bei einer Subtraktion?","Minuend",["Subtrahend","Differenz","Summand"]],["Wie heißt die Zahl, die abgezogen wird?","Subtrahend",["Minuend","Differenz","Faktor"]],["Wie heißt das Ergebnis einer Subtraktion?","Differenz",["Summe","Produkt","Quotient"]],["Bei 28 − 9 = 19: Wie heißt die 28?","Minuend",["Subtrahend","Differenz","Quotient"]],["Bei 28 − 9 = 19: Wie heißt die 9?","Subtrahend",["Minuend","Differenz","Faktor"]]],
- mul:[["Wie heißen die Zahlen, die miteinander multipliziert werden?","Faktoren",["Summanden","Divisoren","Differenzen"]],["Wie heißt das Ergebnis einer Multiplikation?","Produkt",["Summe","Differenz","Quotient"]],["Bei 6 · 8 = 48: Wie heißt die 6?","Faktor",["Produkt","Quotient","Summand"]],["Bei 6 · 8 = 48: Wie heißt die 48?","Produkt",["Faktor","Differenz","Dividend"]],["Was bedeutet „multiplizieren“?","Malnehmen",["Teilen","Abziehen","Addieren"]]],
- div:[["Wie heißt die Zahl, die geteilt wird?","Dividend",["Divisor","Quotient","Produkt"]],["Wie heißt die Zahl, durch die geteilt wird?","Divisor",["Dividend","Quotient","Summand"]],["Wie heißt das Ergebnis einer Division ohne Rest?","Quotient",["Differenz","Produkt","Summe"]],["Bei 56 : 7 = 8: Wie heißt die 56?","Dividend",["Divisor","Quotient","Faktor"]],["Bei 56 : 7 = 8: Wie heißt die 7?","Divisor",["Dividend","Quotient","Produkt"]]]
- };
- const item=mode==="rules"?RULES[index%RULES.length]:sets[OP][index%sets[OP].length];return {question:item[0],answer:item[1],options:shuffle([item[1],...item[2]]),hint:"Überlege, welche Rolle die Zahl in der Rechnung hat."};
+
+const usedQuestions=new Set();
+function uniqueTask(factory){
+ let item,signature;
+ for(let attempt=0;attempt<90;attempt++){
+  item=factory();signature=item.question;
+  if(!usedQuestions.has(signature))break;
  }
+ usedQuestions.add(signature);
+ if(usedQuestions.size>120)usedQuestions.clear();
+ return item;
+}
+function terminologyTask(){
+ const a=random(12,89),b=random(2,11),c=a+b;
+ const cases={
+ sub:[
+ [`Bei ${a+b} − ${b} = ${a}: Wie heißt die ${a+b}?`,"Minuend",["Subtrahend","Differenz","Summand"]],
+ [`Bei ${a+b} − ${b} = ${a}: Wie heißt die ${b}?`,"Subtrahend",["Minuend","Differenz","Faktor"]],
+ [`Bei ${a+b} − ${b} = ${a}: Wie heißt die ${a}?`,"Differenz",["Summe","Produkt","Quotient"]]],
+ mul:[
+ [`Bei ${a} · ${b} = ${a*b}: Wie heißt die ${a}?`,"Faktor",["Produkt","Dividend","Summand"]],
+ [`Bei ${a} · ${b} = ${a*b}: Wie heißt die ${a*b}?`,"Produkt",["Summe","Quotient","Differenz"]],
+ [`Bei ${a} · ${b} = ${a*b}: Wie heißt die ${b}?`,"Faktor",["Differenz","Produkt","Divisor"]]],
+ div:[
+ [`Bei ${a*b} : ${b} = ${a}: Wie heißt die ${a*b}?`,"Dividend",["Divisor","Quotient","Produkt"]],
+ [`Bei ${a*b} : ${b} = ${a}: Wie heißt die ${b}?`,"Divisor",["Dividend","Quotient","Faktor"]],
+ [`Bei ${a*b} : ${b} = ${a}: Wie heißt die ${a}?`,"Quotient",["Dividend","Produkt","Differenz"]]]
+ };
+ const item=cases[OP][random(0,2)];
+ return {question:item[0],answer:item[1],options:shuffle([item[1],...item[2]]),hint:"Denke an die Namen der Zahlen in der Rechnung."};
+}
+function ruleTask(){
+ const item=RULES[random(0,RULES.length-1)];
+ return {question:item[0],answer:item[1],options:shuffle([item[1],...item[2]]),hint:"Überlege dir die Rechenregel."};
+}
+function makeTask(){
+ if(mode==="terms"||mode==="rules")return uniqueTask(()=>mode==="terms"?terminologyTask():ruleTask());
  let a,b,result,hint,question,rest=0;
  if(OP==="sub"){
  if(mode==="mental"){a=random(30,300);b=random(5,a-1)}
@@ -78,7 +106,7 @@ function makeTask(){
 function start(m){mode=m;index=0;points=0;$("select").hidden=true;$("select").style.display="none";$("end").style.display="none";$("exercise").style.display="block";$("modeTitle").textContent=names[OP][mode];newTask()}
 function newTask(){
  $("writtenBoard").style.display="none";$("writtenCheck").hidden=false;$("writtenCheck").disabled=false;
- task=makeTask();tries=0;locked=false;$("status").textContent=`Aufgabe ${index+1} / 10`;$("score").textContent=`${points} ⭐`;$("fill").style.width=(index/10*100)+"%";$("task").textContent=task.question;$("feedback").textContent="";$("answer").value="";$("next").hidden=true;$("check").hidden=false;$("tip").hidden=false;
+ task=(mode==="terms"||mode==="rules")?makeTask():uniqueTask(makeTask);tries=0;locked=false;$("status").textContent=`Aufgabe ${index+1} / 10`;$("score").textContent=`${points} ⭐`;$("fill").style.width=(index/10*100)+"%";$("task").textContent=task.question;$("feedback").textContent="";$("answer").value="";$("next").hidden=true;$("check").hidden=false;$("tip").hidden=false;
  $("writeHint").style.display=mode==="written"?"block":"none";
  $("entry").hidden=(mode==="terms"||mode==="rules");$("choices").hidden=!(mode==="terms"||mode==="rules");
  if(mode==="terms"||mode==="rules"){$("choices").innerHTML="";task.options.forEach(value=>{const b=document.createElement("button");b.className="choice";b.textContent=value;b.onclick=()=>verify(value);$("choices").appendChild(b)})}

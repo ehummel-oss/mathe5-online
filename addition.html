@@ -1,0 +1,211 @@
+<!doctype html><html lang="de"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Addition – Mathe 5</title><style>
+*{box-sizing:border-box}body{margin:0;background:linear-gradient(130deg,#eaf5ff,#fff8e9);color:#193c53;font-family:"Century Gothic",Arial,sans-serif}main{max-width:920px;margin:auto;padding:24px 15px}
+a.back{display:inline-block;background:white;border:2px solid #bed7e5;border-radius:12px;padding:11px 17px;text-decoration:none;color:#193c53;font-weight:bold;margin-bottom:15px}
+header{background:#193d58;color:white;padding:27px;border-radius:24px}h1{font-size:clamp(26px,5vw,41px);margin:0}header p{color:#d9edf7}
+.box{background:white;border:2px solid #d3e5ee;border-radius:22px;padding:24px;margin:18px 0;box-shadow:0 8px 18px #16415a16}
+.modes{display:grid;grid-template-columns:repeat(3,1fr);gap:13px}.mode{border:3px solid #bed9e6;background:#f3faff;border-radius:18px;cursor:pointer;padding:19px 10px;min-height:124px;font:800 17px "Century Gothic",Arial}.mode .em{display:block;font-size:33px;margin-bottom:8px}.mode:hover,.mode:focus-visible{background:#fff2cb;outline:2px solid #c99830}
+#exercise{display:none}.bar{height:13px;border-radius:12px;background:#e2edf3;overflow:hidden;margin:12px 0}.fill{height:100%;width:0;background:#39a98a;transition:width .3s}
+.task{font-size:clamp(24px,4vw,35px);font-weight:900;margin:20px 0;white-space:pre-wrap}
+input{font:800 23px "Century Gothic",Arial;border:3px solid #93bccc;border-radius:12px;padding:13px;width:100%;max-width:400px}input:focus-visible{outline:3px solid #e8b84e}
+button.action{font:800 16px "Century Gothic",Arial;border:0;border-radius:12px;padding:13px 19px;background:#1a729a;color:white;cursor:pointer;margin:8px 8px 0 0}
+button.secondary{background:#ffe2a0;color:#183b51}button:disabled{opacity:.5;cursor:default}
+.feedback{font-size:18px;font-weight:800;min-height:40px;margin-top:13px}.pill{background:#fff0bf;border-radius:99px;padding:8px 12px;display:inline-block;font-weight:800}
+.small{font-size:14px;color:#547185}.choices{display:grid;grid-template-columns:repeat(2,1fr);gap:12px}.choice{border:2px solid #8dbacb;background:#f5fbff;border-radius:12px;padding:15px;font:800 17px "Century Gothic",Arial;cursor:pointer}
+#end{display:none;text-align:center}.endemoji{font-size:70px}
+@media(max-width:600px){.modes,.choices{grid-template-columns:1fr}.box{padding:16px}}
+.knowledge{background:#fff9e9;border:3px solid #efd49b}.knowledge p{line-height:1.65}.knowledge .danger{background:#ffe8e8;border-left:5px solid #d54242;padding:12px;border-radius:9px}.mode[data-mode="rules"]{background:#fff1cb}@media(min-width:601px){.modes{grid-template-columns:repeat(2,1fr)}}
+.written-board{display:none;background:#f6fbff;border:2px solid #b4d2e2;border-radius:18px;padding:16px;margin:14px 0;overflow-x:auto}
+.written-board h3{margin:4px 0 12px}
+.digit-grid{display:grid;grid-template-columns:repeat(var(--cols),minmax(30px,43px));gap:2px;width:max-content;max-width:100%;margin:12px auto;font-family:Consolas,monospace}
+.digit-cell{height:45px;min-width:30px;border:1px solid #b4c9da;background:white;display:flex;align-items:center;justify-content:center;font-size:22px;font-weight:800;border-radius:3px}
+.digit-cell.label{background:#e4f0f8;color:#295a7b}.digit-cell.answer{padding:0;border:2px solid #5596bc;background:#fffce9}
+.digit-cell.answer input{width:100%;height:100%;min-width:0;border:0;background:transparent;text-align:center;font:800 22px Consolas,monospace;padding:0;border-radius:0}
+.digit-cell.correct{background:#d4f5dd;border-color:#248b51}.digit-cell.incorrect{background:#ffe0e0;border-color:#c94c4c}
+.written-step{background:#fff1cc;padding:10px;border-radius:10px;font-weight:700;margin:12px 0}
+.written-actions{display:flex;gap:8px;flex-wrap:wrap}
+.written-actions button{background:#1a729a;color:white;border:0;border-radius:10px;padding:11px 14px;font:800 15px "Century Gothic",Arial;cursor:pointer}
+.written-actions button:disabled{opacity:.4}
+.written-message{min-height:28px;font-weight:800;margin-top:10px}
+</style></head><body><main><a class="back" href="lernbereich-2.html">← Zurück zu den Rechenarten</a><header><h1>➕ Addition</h1><p>Lernbereich II · Mathematik 5 · Wähle eine Übungsart!</p></header>
+<section class="box" id="select"><h2>🎯 Was möchtest du üben?</h2><div class="modes">
+<button class="mode" data-mode="mental"><span class="em">🧠</span>Kopfrechnen</button>
+<button class="mode" data-mode="terms"><span class="em">📚</span>Fachbegriffe</button>
+<button class="mode" data-mode="written"><span class="em">✏️</span>Schriftlich rechnen</button><button class="mode" data-mode="rules"><span class="em">🧩</span>Merkwissen testen</button></div><p class="small">Je Runde 10 Aufgaben. Bei Fehlern bekommst du einen Tipp und darfst es noch einmal versuchen.</p></section>
+<section class="box" id="exercise"><div><span class="pill" id="status">Aufgabe 1 / 10</span><span class="pill" id="score">0 ⭐</span></div><div class="bar"><div class="fill" id="fill"></div></div>
+<h2 id="modeTitle"></h2><div class="task" id="task"></div><div id="entry"><input id="answer" inputmode="numeric" autocomplete="off" aria-label="Ergebnis eingeben" placeholder="Ergebnis eingeben"></div><div class="choices" id="choices" hidden></div><div class="written-board" id="writtenBoard"><h3>✏️ Rechne direkt hier auf dem Bildschirm</h3><div class="small">Trage die Ziffern in die Kästchen ein. Du brauchst kein Heft.</div><p id="writtenTask"></p><div class="written-step" id="writtenStep"></div><div class="digit-grid" id="writtenGrid"></div><input id="writtenEntry" style="display:none" inputmode="text" aria-label="Quotient und Rest" placeholder="Quotient"><div class="written-message" id="writtenMessage" aria-live="polite"></div><div class="written-actions"><button id="writtenCheck">✓ Zeile prüfen</button><button id="writtenContinue" hidden>Nächster Rechenschritt →</button></div></div>
+<div class="feedback" id="feedback" aria-live="polite"></div>
+<button class="action" id="check">✓ Überprüfen</button><button class="action secondary" id="tip">💡 Tipp</button><button class="action secondary" id="next" hidden>Nächste Aufgabe →</button>
+<button class="action secondary" id="menu">↩ Übungsart wechseln</button>
+<p class="small" id="writeHint">Schriftliche Aufgaben bitte mit Überträgen oder Entbündeln ins Heft rechnen.</p></section>
+<section class="box" id="end"><div class="endemoji">🏆</div><h2>Super gemacht!</h2><p id="endText"></p><button class="action" id="again">🔁 Neue Aufgaben</button><button class="action secondary" id="endMenu">← Übungsart wählen</button></section>
+</main><script>
+const OP="add";
+const $=id=>document.getElementById(id);
+const random=(min,max)=>Math.floor(Math.random()*(max-min+1))+min;
+const names={add:{mental:"Kopfrechnen: Addition",terms:"Fachbegriffe der Addition",written:"Schriftlich addieren",rules:"Merkwissen: Addition"},sub:{mental:"Kopfrechnen: Subtraktion",terms:"Fachbegriffe der Subtraktion",written:"Schriftlich subtrahieren",rules:"Merkwissen: Subtraktion"},mul:{mental:"Kopfrechnen: Multiplikation",terms:"Fachbegriffe der Multiplikation",written:"Schriftlich multiplizieren",rules:"Merkwissen: Multiplikation"},div:{mental:"Kopfrechnen: Division",terms:"Fachbegriffe der Division",written:"Schriftlich dividieren",rules:"Merkwissen: Division"}};
+let mode="",index=0,points=0,task=null,tries=0,locked=false;
+const RULES=[
+ ["Welches Gesetz zeigt 5 + 8 = 8 + 5?","Vertauschungsgesetz",["Klammergesetz","Teilungsgesetz","Nullregel"]],
+ ["Welches Gesetz zeigt (3 + 4) + 5 = 3 + (4 + 5)?","Klammergesetz",["Vertauschungsgesetz","Minusgesetz","Produktgesetz"]],
+ ["Wie heißt das Ergebnis einer Addition?","Summe",["Differenz","Produkt","Quotient"]],
+ ["Was gilt bei der Addition mit 0?","Die Zahl bleibt gleich",["Die Zahl wird 0","Die Zahl verdoppelt sich","Die Zahl wird kleiner"]],
+ ["Darf man bei einer Addition die Summanden vertauschen?","Ja",["Nein","Nur bei geraden Zahlen","Nur ohne Klammern"]]
+];
+const shuffle=a=>{for(let i=a.length-1;i>0;i--){const j=random(0,i);[a[i],a[j]]=[a[j],a[i]]}return a};
+
+const usedQuestions=new Set();
+function uniqueTask(factory){
+ let item,signature;
+ for(let attempt=0;attempt<90;attempt++){
+  item=factory();signature=item.question;
+  if(!usedQuestions.has(signature))break;
+ }
+ usedQuestions.add(signature);
+ if(usedQuestions.size>120)usedQuestions.clear();
+ return item;
+}
+function terminologyTask(){
+ const a=random(11,95),b=random(12,88),sum=a+b;
+ const cases=[
+ [`Bei ${a} + ${b} = ${sum}: Wie heißt die ${a}?`,"Summand",["Summe","Differenz","Faktor"]],
+ [`Bei ${a} + ${b} = ${sum}: Wie heißt die ${b}?`,"Summand",["Produkt","Summe","Divisor"]],
+ [`Bei ${a} + ${b} = ${sum}: Wie heißt die ${sum}?`,"Summe",["Summand","Quotient","Differenz"]]
+ ];
+ const item=cases[random(0,2)];
+ return {question:item[0],answer:item[1],options:shuffle([item[1],...item[2]]),hint:"Denke an die Fachbegriffe Summand und Summe."};
+}
+function ruleTask(){
+ const item=RULES[random(0,RULES.length-1)];
+ return {question:item[0],answer:item[1],options:shuffle([item[1],...item[2]]),hint:"Überlege dir die Rechenregel."};
+}
+function makeTask(){
+ if(mode==="terms"||mode==="rules")return uniqueTask(()=>mode==="terms"?terminologyTask():ruleTask());
+ let a,b,result,hint,question,rest=0;
+ if(mode==="mental"){a=random(35,680);b=random(15,480)}
+ else{a=random(1200,95000);b=random(1001,85000)}
+ result=a+b;question=`${a.toLocaleString("de-DE")} + ${b.toLocaleString("de-DE")} = ?`;
+ hint=mode==="mental"?"Zerlege in Hunderter, Zehner und Einer.":"Schreibe die Stellenwerte untereinander und beachte die Überträge.";
+
+ return {question,answer:result,rest,hint,a,b};
+}
+function start(m){mode=m;index=0;points=0;$("select").hidden=true;$("select").style.display="none";$("end").style.display="none";$("exercise").style.display="block";$("modeTitle").textContent=names[OP][mode];newTask()}
+function newTask(){
+ $("writtenBoard").style.display="none";$("writtenCheck").hidden=false;$("writtenCheck").disabled=false;
+ task=(mode==="terms"||mode==="rules")?makeTask():uniqueTask(makeTask);tries=0;locked=false;$("status").textContent=`Aufgabe ${index+1} / 10`;$("score").textContent=`${points} ⭐`;$("fill").style.width=(index/10*100)+"%";$("task").textContent=task.question;$("feedback").textContent="";$("answer").value="";$("next").hidden=true;$("check").hidden=false;$("tip").hidden=false;
+ $("writeHint").style.display=mode==="written"?"block":"none";
+ $("entry").hidden=(mode==="terms"||mode==="rules");$("choices").hidden=!(mode==="terms"||mode==="rules");
+ if(mode==="terms"||mode==="rules"){$("choices").innerHTML="";task.options.forEach(value=>{const b=document.createElement("button");b.className="choice";b.textContent=value;b.onclick=()=>verify(value);$("choices").appendChild(b)})}
+ else{$("answer").placeholder=task.rest?"Quotient, z. B. 123 Rest 2":"Ergebnis eingeben";$("answer").focus()}
+ if(mode==="written")newWritten();
+}
+function verify(raw){
+ if(locked)return;
+ let good=false;
+ if(mode==="terms"||mode==="rules")good=raw===task.answer;
+ else{
+ const value=String(raw).trim().replace(/\s/g,"").replace(/\./g,"");
+ if(task.rest){const m=value.match(/^(\d+)(?:r|rest|R|Rest|,)(\d+)$/i);good=!!m&&Number(m[1])===task.answer&&Number(m[2])===task.rest}
+ else good=/^\d+$/.test(value)&&Number(value)===task.answer;
+ }
+ if(good){locked=true;points++;$("score").textContent=`${points} ⭐`;$("feedback").textContent="🎉 Richtig! Klasse gerechnet!";$("feedback").style.color="#137a50";$("next").hidden=false;$("check").hidden=true;$("tip").hidden=true}
+ else{tries++;$("feedback").style.color="#b1453d";$("feedback").textContent=tries>=2?"Noch nicht. 💡 "+task.hint:"Fast! Prüfe deine Rechnung und versuche es erneut."}
+}
+function next(){index++;if(index>=10){$("exercise").style.display="none";$("end").style.display="block";$("endText").textContent=`Du hast ${points} von 10 Aufgaben gelöst. Weiter so!`;$("fill").style.width="100%"}else newTask()}
+function menu(){$("exercise").style.display="none";$("end").style.display="none";$("select").hidden=false;$("select").style.display="block"}
+document.querySelectorAll("[data-mode]").forEach(b=>b.onclick=()=>start(b.dataset.mode));
+$("check").onclick=()=>verify($("answer").value);$("answer").addEventListener("keydown",e=>{if(e.key==="Enter"){if(locked)next();else verify($("answer").value)}});
+$("next").onclick=next;$("tip").onclick=()=>{$("feedback").style.color="#345f8a";$("feedback").textContent="💡 "+task.hint};$("menu").onclick=menu;$("again").onclick=()=>start(mode);$("endMenu").onclick=menu;
+
+let ws=null;
+function digitsOf(n){return String(n).split('').map(Number)}
+function gridRow(label,number,width,editable=false){
+ const row=document.createElement('div');row.style.display='contents';
+ const str=number===null?'':String(number);
+ const pad=Math.max(0,width-str.length);
+ for(let i=0;i<width;i++){
+  const cell=document.createElement('div');cell.className='digit-cell'+(editable?' answer':'');
+  if(i===0&&label){cell.classList.add('label');cell.textContent=label;row.appendChild(cell);continue}
+  const idx=i-pad;
+  if(editable && i>0){
+   const input=document.createElement('input');input.type='text';input.inputMode='numeric';input.maxLength=1;input.autocomplete='off';input.setAttribute('aria-label','Ziffer '+i);
+   input.dataset.pos=String(i);input.addEventListener('input',()=>{input.value=input.value.replace(/\D/g,'').slice(0,1);if(input.value){let all=[...$('writtenGrid').querySelectorAll('input:not(:disabled)')];let next=all[all.indexOf(input)+1];if(next)next.focus()}});
+   input.addEventListener('keydown',e=>{if(e.key==='Backspace'&&!input.value){let all=[...$('writtenGrid').querySelectorAll('input:not(:disabled)')];let prev=all[all.indexOf(input)-1];if(prev)prev.focus()}if(e.key==='Enter')checkWritten()});
+   cell.appendChild(input);
+  }else if(idx>=0){cell.textContent=str[idx]}
+  row.appendChild(cell)
+ }
+ return row;
+}
+function newWritten(){
+ const a=task.a,b=task.b;
+ let steps=[];
+ if(OP==='sub'||OP==='add'){
+  steps=[{label:'Ergebnis',value:a-b,prefix:'+',help:'Rechne von rechts nach links. Wenn nötig, entbündle einen Zehner.'}];
+ }else if(OP==='mul'){
+  let t=b,shift=0;
+  while(t>0){const d=t%10;steps.push({label:'Teilprodukt '+(shift+1),value:a*d*10**shift,help:'Multipliziere '+a+' mit '+d+' und beachte '+shift+' angehängte Null(en).'});t=Math.floor(t/10);shift++}
+  steps.push({label:'Gesamtprodukt',value:a*b,help:'Addiere die Teilprodukte stellenrichtig.'});
+ }else{
+  // Show division in school-style chunks, with one intermediate subtraction per quotient digit.
+  const chars=String(a).split('').map(Number);let rem=0;
+  for(let i=0;i<chars.length;i++){rem=rem*10+chars[i];const digit=Math.floor(rem/b);const sub=digit*b;const newRem=rem-sub;
+   if(i===0&&digit===0) {rem=newRem;continue}
+   steps.push({label:'Schritt '+(steps.length+1)+': '+rem+' + '+sub,value:newRem,help:'Teile '+rem+' durch '+b+': '+digit+'-mal. Ziehe '+sub+' ab. Rest '+newRem+'.'});
+   rem=newRem
+  }
+  steps.push({label:'Quotient'+(task.rest?' mit Rest':''),value:task.rest?String(task.answer)+' R '+task.rest:task.answer,help:'Setze die Quotientenziffern zusammen. Bei Rest: Quotient R Rest.'});
+ }
+ ws={steps,at:0,a,b,wrong:0};
+ $('writtenBoard').style.display='block';$('entry').hidden=true;$('choices').hidden=true;$('check').hidden=true;$('tip').hidden=true;$('next').hidden=true;
+ $('writtenTask').textContent=task.question;
+ renderWritten();
+}
+function renderWritten(){
+ const w=ws,step=w.steps[w.at];
+ $('writtenStep').textContent='Schritt '+(w.at+1)+' von '+w.steps.length+': '+step.label;
+ const maxLen=Math.max(String(w.a).length,String(w.b).length,...w.steps.map(x=>String(x.value).replace(/\D/g,'').length));
+ const cols=Math.max(6,maxLen+2);
+ const grid=$('writtenGrid');grid.replaceChildren();grid.style.setProperty('--cols',cols);
+ grid.appendChild(gridRow('',w.a,cols));
+ grid.appendChild(gridRow(OP==='sub'?'+':OP==='mul'?'×':':',w.b,cols));
+ for(let j=0;j<w.at;j++){const prior=w.steps[j];grid.appendChild(gridRow(j===w.steps.length-1?'=':'',String(prior.value).replace(/\s*R\s*/,'R'),cols))}
+ if(OP==='div'&&w.at===w.steps.length-1){
+  $('writtenStep').textContent+=' (Quotient und Rest eingeben)';
+  $('writtenEntry').style.display='block';$('writtenEntry').value='';$('writtenEntry').placeholder='z. B. 236 oder 236 R 2';
+  grid.appendChild(gridRow('',null,cols,false))
+ }else{
+  $('writtenEntry').style.display='none';
+  grid.appendChild(gridRow('=',null,cols,true));
+ }
+ $('writtenMessage').textContent='';
+ const first=grid.querySelector('input');if(first)first.focus();else $('writtenEntry').focus();
+}
+function checkWritten(){
+ if(!ws)return;
+ const step=ws.steps[ws.at];let given='';
+ if(OP==='div'&&ws.at===ws.steps.length-1)given=$('writtenEntry').value.trim().replace(/\s+/g,'').toUpperCase();
+ else {
+  const fields=[...$('writtenGrid').querySelectorAll('input')];
+  given=fields.map(x=>x.value||' ').join('').trim().replace(/\s/g,'');
+ }
+ const expected=String(step.value).replace(/\s+/g,'').toUpperCase();
+ if(given===expected){
+  $('writtenMessage').textContent='✅ Richtig! Gut gemacht.';$('writtenMessage').style.color='#19754c';
+  [...$('writtenGrid').querySelectorAll('input')].forEach(x=>{x.disabled=true;x.parentElement.classList.add('correct')});
+  $('writtenCheck').disabled=true;$('writtenContinue').hidden=false;
+ }else{
+  ws.wrong++;$('writtenMessage').textContent='❌ Noch nicht richtig. Prüfe die Stellenwerte. '+(ws.wrong>=2?step.help:'');
+  $('writtenMessage').style.color='#b1453d'
+ }
+}
+function continueWritten(){
+ ws.at++;ws.wrong=0;$('writtenCheck').disabled=false;$('writtenContinue').hidden=true;
+ if(ws.at>=ws.steps.length){
+  locked=true;points++;$('score').textContent=points+' ⭐';$('writtenMessage').textContent='🎉 Ganze Aufgabe geschafft!';$('writtenStep').textContent='Alle Rechenschritte gelöst!';
+  $('writtenCheck').hidden=true;$('writtenContinue').hidden=true;$('next').hidden=false;
+ }else renderWritten();
+}
+$('writtenCheck').onclick=checkWritten;
+$('writtenContinue').onclick=continueWritten;
+</script></body></html>
